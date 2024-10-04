@@ -8,7 +8,7 @@ import {
   resetDatabase,
 } from '../testUtils';
 import request from 'supertest';
-import prismaClient from '../../prismaClient';
+import prismaClient from '@playoff-bracket-app/database';
 
 describe('Tournament Routes', () => {
   const createRoute = '/api/v1/tournament/create';

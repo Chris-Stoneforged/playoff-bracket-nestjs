@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import errorHandler from './middleware/errors';
 import securityHeaders from './middleware/security';
 import rateLimiter from './middleware/rateLimit';
+import path from 'path';
 import * as Sentry from '@sentry/node';
 
 const app: Express = express();
@@ -21,6 +22,12 @@ app.use('/api', authRouter);
 app.use('/api', tournamentRouter);
 app.use('/api', bracketRouter);
 app.use('/api/admin', adminRouter);
+
+// Serve react app
+app.use(express.static(path.resolve(__dirname, '../../../frontend')));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../../../frontend', 'index.html'));
+});
 
 // Sentry
 if (process.env.ENV == 'PRODUCTION') {
