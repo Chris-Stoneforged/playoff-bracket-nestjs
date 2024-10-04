@@ -8,19 +8,18 @@ export default async function errorHandler(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) {
-  throw error;
-  // let statusCode = 500;
-  // if (error instanceof ServerError) {
-  //   statusCode = error.statusCode;
-  // }
+  let statusCode = 500;
+  if (error instanceof ServerError) {
+    statusCode = error.statusCode;
+  }
 
-  // let message = error.message;
-  // if (statusCode === 500 && process.env.ENV == 'PRODUCTION') {
-  //   message = 'Something went wrong';
-  // }
+  let message = error.message;
+  if (statusCode === 500 && process.env.ENV == 'PRODUCTION') {
+    message = 'Something went wrong';
+  }
 
-  // response.status(statusCode).json({
-  //   success: false,
-  //   message: message,
-  // });
+  response.status(statusCode).json({
+    success: false,
+    message: message,
+  });
 }
