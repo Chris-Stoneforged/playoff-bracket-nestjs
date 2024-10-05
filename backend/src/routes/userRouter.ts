@@ -1,6 +1,6 @@
 import errorSafe from '../errors/errorHandler';
 import {
-  getTournaments,
+  getUserData,
   login,
   logout,
   register,
@@ -12,8 +12,6 @@ const router: Router = express.Router();
 router.route('/v1/user/register').post(errorSafe(register));
 router.route('/v1/user/login').post(errorSafe(login));
 router.route('/v1/user/logout').post(errorSafe(isUserAuthenticated, logout));
-router
-  .route('/v1/user/tournaments')
-  .get(errorSafe(isUserAuthenticated, getTournaments));
+router.route('/v1/user').get(errorSafe(isUserAuthenticated, getUserData));
 
 export default router;

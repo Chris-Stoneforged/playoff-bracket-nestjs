@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
-import { routes } from '../../utils/routes';
+import { postRequest, routes } from '../../utils/routes';
 import { isLoggedIn } from '../../utils/loginUtils';
 
 export default function Login() {
@@ -11,28 +11,22 @@ export default function Login() {
 
   useEffect(() => {
     if (isLoggedIn()) {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const body = {
+    const response = await postRequest(routes.user.login, {
       email: email,
       password: password,
-    };
-
-    const response = await fetch(routes.user.login, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
 
     if (response.status === 200) {
-      navigate('/');
+      const json = await response.json();
+      console.log(json.user);
+      navigate('/', { state: json.user });
     }
   };
 
