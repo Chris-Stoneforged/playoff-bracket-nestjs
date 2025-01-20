@@ -1,0 +1,25 @@
+.background {
+  background-color: aquamarine;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+
+.user-section {
+  display: flex;
+  padding-right: 16px;
+  height: 24px;
+  justify-content: right;
+  width: 200px;
+  align-items: center;
+}
+
+.user-name-text {
+  padding-right: 8px;
+}
+
+.title {
+  font-size: large;
+  padding-left: 16px;
+}

@@ -1,0 +1,17 @@
+.tournament-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: flex-start;
+}
+
+.tournament-list {
+  display: flex;
+  flex-direction: column;
+  list-style-position: inside;
+  padding: 0;
+}
+
+.tournament-item {
+  margin-left: 0;
+}

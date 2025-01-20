@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "dev": "nx build frontend && dotenv -e .env -- nx serve backend",
     "backend-dev": "dotenv -e .env -- nx serve backend",
     "frontend-dev": "dotenv -e .env -- nx serve frontend",
     "start": "nx build frontend && dotenv -e .env.production -- nx serve backend"
