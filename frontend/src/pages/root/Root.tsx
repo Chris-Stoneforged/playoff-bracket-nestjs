@@ -54,21 +54,19 @@ export default function Root() {
 
   return (
     <div>
-      <header>
+      <div>
         <HeaderBar
           userName={user.nickname}
           handleLogout={handleLogoutClick}
         ></HeaderBar>
-      </header>
-      <main>
-        <div className="main">
-          <TournamentList
-            tournaments={user.tournaments}
-            handleClick={handleTournamentClicked}
-          ></TournamentList>
-          <TournamentPanel />
-        </div>
-      </main>
+      </div>
+      <div className="main">
+        <TournamentList
+          tournaments={user.tournaments}
+          handleClick={handleTournamentClicked}
+        ></TournamentList>
+        <TournamentPanel />
+      </div>
     </div>
   );
 }
