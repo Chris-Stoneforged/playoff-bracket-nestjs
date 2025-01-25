@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { isLoggedIn } from '../../utils/loginUtils';
 import './Root.css';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserData } from '@playoff-bracket-app/database';
 import { getRequest, postRequest, routes } from '../../utils/routes';
-import TournamentList from '../../components/tournamentList/TournamentList';
-import TournamentPanel from '../../components/tournamentPanel/TournamentPanel';
 import HeaderBar from '../../components/headerBar/HeaderBar';
+import userContext from '../../utils/context';
 
 export default function Root() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState<UserData>({
-    nickname: '',
-    tournaments: [],
-  });
+  const [user, setUser] = useState<UserData | null>(null);
 
   const fetchUserData = async () => {
     const response = await getRequest(routes.user.userData);
@@ -30,11 +26,8 @@ export default function Root() {
 
   const handleLogoutClick = async () => {
     await postRequest(routes.user.logout);
+    setUser(null);
     navigate('/login');
-  };
-
-  const handleTournamentClicked = (tournamentId: number) => {
-    console.log(`Selected tournament with id ${tournamentId}`);
   };
 
   useEffect(() => {
@@ -54,17 +47,10 @@ export default function Root() {
 
   return (
     <div style={{ height: '100%' }}>
-      <HeaderBar
-        userName={user.nickname}
-        handleLogout={handleLogoutClick}
-      ></HeaderBar>
-      <div className="main">
-        <TournamentList
-          tournaments={user.tournaments}
-          handleClick={handleTournamentClicked}
-        ></TournamentList>
-        <TournamentPanel />
-      </div>
+      <userContext.Provider value={user}>
+        <HeaderBar user={user} handleLogout={handleLogoutClick}></HeaderBar>
+        <Outlet />
+      </userContext.Provider>
     </div>
   );
 }

@@ -12,7 +12,7 @@
 }
 
 .tournament-column.open {
-  width: 250px;
+  width: 300px;
 }
 
 .list-header {
@@ -42,6 +42,7 @@
 }
 
 .tournament-list {
+  width: 100%;
   list-style-position: inside;
   margin-top: 8px;
   opacity: 0;
