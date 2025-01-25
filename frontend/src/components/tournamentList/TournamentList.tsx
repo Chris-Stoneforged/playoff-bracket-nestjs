@@ -32,9 +32,11 @@ export default function TournamentList({
             className="tournament-item"
             onClick={() => handleClick(tournament.tournamentId)}
           >
-            <div className="button-content">
+            <div className="tournament-item-content">
               {tournament.bracketName}
-              <text className="button-sub-text">With Kenny, Cam, Ash...</text>
+              <text className="tournament-item-sub-text">
+                With Kenny, Cam, Ash...
+              </text>
             </div>
           </button>
         ))}
