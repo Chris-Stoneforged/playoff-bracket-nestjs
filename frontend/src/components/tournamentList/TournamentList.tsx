@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TournamentData } from '@playoff-bracket-app/database';
 import './TournamentList.css';
 
@@ -11,19 +11,27 @@ export default function TournamentList({
   tournaments,
   handleClick,
 }: TournamentListProps) {
+  const [expanded, setExpanded] = useState(true);
+
   return (
     <div className="tournament-column">
-      My Tournaments
-      <ul className="tournament-list">
+      <div className="list-header">
+        My Tournaments
+        <button onClick={() => setExpanded(!expanded)}></button>
+      </div>
+      <div className="tournament-list">
         {tournaments.map((tournament) => (
           <button
             className="tournament-item"
             onClick={() => handleClick(tournament.tournamentId)}
           >
-            {tournament.bracketName}
+            <div className="button-content">
+              {tournament.bracketName}
+              <text className="button-sub-text">With Kenny, Cam, Ash...</text>
+            </div>
           </button>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

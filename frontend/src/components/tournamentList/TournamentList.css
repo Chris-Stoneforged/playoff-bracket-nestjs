@@ -1,17 +1,42 @@
-.tournament-column {
+.tournament-column.open {
   display: flex;
   flex-direction: column;
-  justify-content: left;
-  align-items: flex-start;
+  align-items: center;
+  background-color: #22529f;
+  color: white;
+  padding-left: 16px;
+  padding-top: 24px;
+  padding-right: 16px;
+  width: 180px;
 }
 
 .tournament-list {
-  display: flex;
-  flex-direction: column;
   list-style-position: inside;
-  padding: 0;
+  margin-top: 8px;
 }
 
 .tournament-item {
-  margin-left: 0;
+  background-color: #1e488b;
+  border-color: white;
+  border-radius: 5px;
+  width: 100%;
+  height: 50px;
+  color: white;
+  margin-top: 6px;
+}
+
+.tournament-item:hover {
+  background-color: #22529f;
+}
+
+.button-sub-text {
+  font-size: xx-small;
+  color: rgb(218, 218, 218);
+  margin-top: 4px;
+}
+
+.button-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
