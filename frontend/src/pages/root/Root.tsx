@@ -53,13 +53,11 @@ export default function Root() {
   }, [location.state, navigate]);
 
   return (
-    <div>
-      <div>
-        <HeaderBar
-          userName={user.nickname}
-          handleLogout={handleLogoutClick}
-        ></HeaderBar>
-      </div>
+    <div style={{ height: '100%' }}>
+      <HeaderBar
+        userName={user.nickname}
+        handleLogout={handleLogoutClick}
+      ></HeaderBar>
       <div className="main">
         <TournamentList
           tournaments={user.tournaments}

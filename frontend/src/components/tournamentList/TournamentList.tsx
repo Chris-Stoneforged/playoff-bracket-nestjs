@@ -11,13 +11,20 @@ export default function TournamentList({
   tournaments,
   handleClick,
 }: TournamentListProps) {
-  const [expanded, setExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <div className="tournament-column">
+    <div className={`tournament-column ${isExpanded ? 'open' : ''}`}>
       <div className="list-header">
-        My Tournaments
-        <button onClick={() => setExpanded(!expanded)}></button>
+        <button
+          className="expand-button"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          {isExpanded ? '<' : '>'}
+        </button>
+        <text className="header-text">
+          {isExpanded ? 'My Tournaments' : ''}
+        </text>
       </div>
       <div className="tournament-list">
         {tournaments.map((tournament) => (
