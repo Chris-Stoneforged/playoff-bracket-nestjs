@@ -7,7 +7,9 @@ export const routes = {
     logout: '/api/v1/user/logout',
     userData: '/api/v1/user',
   },
-  tournaments: {},
+  tournaments: {
+    details: '/api/v1/tournament/',
+  },
   admin: {},
   brackets: {},
 };

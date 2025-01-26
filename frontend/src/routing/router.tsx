@@ -5,6 +5,7 @@ import Register from '../pages/register/Register';
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/home/Home';
 import Tournament from '../pages/tournament/Tournament';
+import { tournamentDetailLoader } from '../utils/loaders';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
           {
             path: '/tournament/:tournamentId',
             element: <Tournament />,
+            loader: tournamentDetailLoader,
           },
         ],
       },
