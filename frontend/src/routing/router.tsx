@@ -4,6 +4,7 @@ import Error from '../pages/error/Error';
 import Register from '../pages/register/Register';
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/home/Home';
+import Tournament from '../pages/tournament/Tournament';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,12 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />,
+        children: [
+          {
+            path: '/tournament/:tournamentId',
+            element: <Tournament />,
+          },
+        ],
       },
     ],
   },
