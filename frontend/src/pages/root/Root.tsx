@@ -46,10 +46,12 @@ export default function Root() {
   }, [location.state, navigate]);
 
   return (
-    <div style={{ height: '100%' }}>
+    <div className="root-div">
       <userContext.Provider value={user}>
         <HeaderBar user={user} handleLogout={handleLogoutClick}></HeaderBar>
-        <Outlet />
+        <div className="main-content">
+          <Outlet />
+        </div>
       </userContext.Provider>
     </div>
   );

@@ -41,6 +41,15 @@ export default function TournamentList({
           </button>
         ))}
       </div>
+      <div className="spacer"></div>
+      <button
+        className="create-button"
+        onClick={() => {
+          console.log('Creating tournament...');
+        }}
+      >
+        Create Tournament
+      </button>
     </div>
   );
 }
