@@ -18,3 +18,8 @@ export type MemberData = {
 export type TournamentDetailedData = TournamentData & {
   memberData: MemberData[];
 };
+
+export type BracketData = {
+  id: number;
+  bracket_name: string;
+};

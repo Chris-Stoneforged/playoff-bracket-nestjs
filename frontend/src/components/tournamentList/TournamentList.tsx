@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TournamentData } from '@playoff-bracket-app/database';
 import './TournamentList.css';
+import CreateTournamentPopup from '../createTournamentPopup/createTournamentPopup';
 
 type TournamentListProps = {
   tournaments: TournamentData[];
@@ -12,6 +13,7 @@ export default function TournamentList({
   handleClick,
 }: TournamentListProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
 
   return (
     <div className={`tournament-column ${isExpanded ? 'open' : ''}`}>
@@ -44,12 +46,15 @@ export default function TournamentList({
       <div className="spacer"></div>
       <button
         className="create-button"
-        onClick={() => {
-          console.log('Creating tournament...');
-        }}
+        onClick={() => setIsCreatePopupOpen(true)}
       >
         Create Tournament
       </button>
+      {isCreatePopupOpen && (
+        <CreateTournamentPopup
+          handlePopupClosed={() => setIsCreatePopupOpen(false)}
+        />
+      )}
     </div>
   );
 }
