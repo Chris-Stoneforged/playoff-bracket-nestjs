@@ -37,18 +37,18 @@ export async function register(
     },
   });
 
+  const userData: UserData = {
+    userId: user.id,
+    nickname: user.nickname,
+    tournaments: [],
+  };
+
   const [token, options] = getCookieData(user);
-  response
-    .status(200)
-    .cookie(cookieName, token, options)
-    .json({
-      success: true,
-      token: token,
-      user: {
-        nickname: user.nickname,
-        tournaments: [],
-      },
-    });
+  response.status(200).cookie(cookieName, token, options).json({
+    success: true,
+    token: token,
+    user: userData,
+  });
 }
 
 export async function login(
@@ -83,25 +83,23 @@ export async function login(
     },
   });
 
-  const tournamentData = userWithTournaments.tournaments.map((tournament) => {
-    return {
-      tournamentId: tournament.id,
-      bracketName: tournament.bracket.bracket_name,
-    };
-  });
+  const userData: UserData = {
+    userId: userWithTournaments.id,
+    nickname: userWithTournaments.nickname,
+    tournaments: userWithTournaments.tournaments.map((tournament) => {
+      return {
+        tournamentId: tournament.id,
+        bracketName: tournament.bracket.bracket_name,
+      };
+    }),
+  };
 
   const [token, options] = getCookieData(user);
-  response
-    .status(200)
-    .cookie(cookieName, token, options)
-    .json({
-      success: true,
-      token: token,
-      user: {
-        nickname: user.nickname,
-        tournaments: tournamentData,
-      },
-    });
+  response.status(200).cookie(cookieName, token, options).json({
+    success: true,
+    token: token,
+    user: userData,
+  });
 }
 
 export async function logout(
@@ -135,6 +133,7 @@ export async function getUserData(request: Request, response: Response) {
   });
 
   const userData: UserData = {
+    userId: userWithTournaments.id,
     nickname: userWithTournaments.nickname,
     tournaments: userWithTournaments.tournaments.map((tournament) => {
       return {

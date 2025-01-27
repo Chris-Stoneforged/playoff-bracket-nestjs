@@ -12,6 +12,11 @@ export default function Tournament() {
   const tournamentData: TournamentDetailedData =
     useLoaderData() as TournamentDetailedData;
 
+  const memberData = tournamentData.memberData;
+  const meIndex = memberData.findIndex((m) => m.id === user?.userId);
+  const [me] = memberData.splice(meIndex, 1);
+  memberData.unshift(me);
+
   const handleMemberClicked = (memberId: number) => {
     console.log('clicked member');
   };
@@ -19,20 +24,12 @@ export default function Tournament() {
   return (
     <div className="tournament-zone">
       <div className="member-list">
-        <button
-          className="member-button"
-          onClick={() => {
-            console.log('clicked self');
-          }}
-        >
-          Me
-        </button>
-        {tournamentData.memberData.map((member) => (
+        {memberData.map((member) => (
           <button
             className="member-button"
             onClick={() => handleMemberClicked(member.id)}
           >
-            {member.nickname}
+            {member.id === user?.userId ? 'Me' : member.nickname}
           </button>
         ))}
       </div>

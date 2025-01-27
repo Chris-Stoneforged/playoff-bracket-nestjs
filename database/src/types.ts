@@ -1,4 +1,5 @@
 export type UserData = {
+  userId: number;
   nickname: string;
   tournaments: TournamentData[];
 };
