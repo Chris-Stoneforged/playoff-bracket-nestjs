@@ -1,30 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import './CreateTournamentPopup.css';
-import { getRequest } from '../../utils/routes';
+import { getRequest, postRequest } from '../../utils/routes';
 import { BracketData } from '@playoff-bracket-app/database';
+import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
 
 type CreateTournamentPopupProps = {
-  handlePopupClosed: () => void;
+  handlePopupClosed: (tournamentId: number | null) => void;
 };
 
 export default function CreateTournamentPopup({
   handlePopupClosed,
 }: CreateTournamentPopupProps) {
   const [availableBrackets, setAvailableBrackets] = useState<BracketData[]>([]);
+  const [selectedBracket, setSelectedBracket] = useState<number>(-1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleBracketChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('Changed');
+    setSelectedBracket(Number.parseInt(event.target.value));
   };
 
   const handleCreateClicked = async () => {
-    // TODO: Create tournament
+    if (selectedBracket < 0) {
+      return;
+    }
+
+    setIsLoading(true);
+    const response = await postRequest('/api/v1/tournament/create');
+    const json = await response.json();
+    handlePopupClosed(json.data.tournamentId);
   };
 
   useEffect(() => {
     const fetchBracketData = async () => {
       const response = await getRequest('/api/v1/brackets');
       const json = await response.json();
-      console.log(json.data);
       setAvailableBrackets(json.data);
     };
 
@@ -36,18 +45,25 @@ export default function CreateTournamentPopup({
       <div className="popup-body">
         <div className="top-section">
           <text className="create-header-text">Create Tournament</text>
-          <button className="close-button" onClick={() => handlePopupClosed()}>
+          <button
+            className="close-button"
+            disabled={isLoading}
+            onClick={() => handlePopupClosed(null)}
+          >
             X
           </button>
         </div>
-        Select Bracket
         <select
           id="dropdown"
           name="dropdown"
           className="dropdown-select"
           onChange={handleBracketChange}
-          defaultValue="Select..."
+          value={selectedBracket}
+          disabled={isLoading}
         >
+          <option hidden value={-1}>
+            Select...
+          </option>
           {availableBrackets.map((bracket) => (
             <option value={bracket.id}>{bracket.bracket_name}</option>
           ))}
@@ -57,8 +73,9 @@ export default function CreateTournamentPopup({
           <button
             className="do-create-button"
             onClick={() => handleCreateClicked()}
+            disabled={isLoading}
           >
-            Create
+            {isLoading ? <LoadingSpinner /> : 'Create'}
           </button>
         </div>
       </div>

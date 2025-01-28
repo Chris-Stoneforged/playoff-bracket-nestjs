@@ -25,7 +25,6 @@ export default function Login() {
 
     if (response.status === 200) {
       const json = await response.json();
-      console.log(json.user);
       navigate('/', { state: json.user });
     }
   };

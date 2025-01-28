@@ -20,7 +20,6 @@ export default function Root() {
     }
 
     const json = await response.json();
-    console.log(json.user);
     setUser(json.user);
   };
 
@@ -39,7 +38,6 @@ export default function Root() {
     const loggedInUser: UserData = location.state;
     if (loggedInUser) {
       setUser(loggedInUser);
-      console.log(loggedInUser);
     } else {
       fetchUserData();
     }
