@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './JoinTournamentPopup.module.css';
 import { TournamentData } from '@playoff-bracket-app/database';
 import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
+import PopupTemplate from '../popupTemplate/popupTemplate';
 
 type JoinTournamentPopupProps = {
   handlePopupClosed: (tournament: TournamentData | null) => void;
@@ -12,46 +13,36 @@ export default function JoinTournamentPopup({
 }: JoinTournamentPopupProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [inviteCode, setInviteCode] = useState('');
+  const [errorText, setErrorText] = useState<string | null>(null);
 
   const handleCodeChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInviteCode(event.target.value);
   };
 
   const handleJoinClicked = () => {
-    console.log('Join clicked!');
+    if (inviteCode === '') {
+      setErrorText('Invalid invite code');
+      return;
+    }
   };
 
   return (
-    <div className={styles.popupDarkenator}>
-      <div className={styles.popupBody}>
-        <div className={styles.topSection}>
-          <text className={styles.joinHeaderText}>Join Tournament</text>
-          <button
-            className={styles.closeButton}
-            disabled={isLoading}
-            onClick={() => handlePopupClosed(null)}
-          >
-            X
-          </button>
-        </div>
-        <input
-          placeholder="Enter invite code..."
-          value={inviteCode}
-          type="text"
-          onInput={handleCodeChanged}
-          className={styles.inviteCodeInput}
-        ></input>
-        <div className={styles.spacer}></div>
-        <div className={styles.bottomArea}>
-          <button
-            className={styles.joinButton}
-            onClick={() => handleJoinClicked()}
-            disabled={isLoading}
-          >
-            {isLoading ? <LoadingSpinner /> : 'Join'}
-          </button>
-        </div>
-      </div>
-    </div>
+    <PopupTemplate
+      title="Join Tournament"
+      submitButtonText="Join"
+      loading={isLoading}
+      disabled={isLoading}
+      errorText={errorText}
+      handlePopupClosed={() => handlePopupClosed(null)}
+      handleSubmit={() => handleJoinClicked()}
+    >
+      <input
+        placeholder="Enter invite code..."
+        value={inviteCode}
+        type="text"
+        onInput={handleCodeChanged}
+        className={styles.inviteCodeInput}
+      ></input>
+    </PopupTemplate>
   );
 }

@@ -3,6 +3,7 @@ import styles from './CreateTournamentPopup.module.css';
 import { getRequest, postRequest } from '../../utils/routes';
 import { BracketData, TournamentData } from '@playoff-bracket-app/database';
 import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
+import PopupTemplate from '../popupTemplate/popupTemplate';
 
 type CreateTournamentPopupProps = {
   handlePopupClosed: (tournament: TournamentData | null) => void;
@@ -13,6 +14,7 @@ export default function CreateTournamentPopup({
 }: CreateTournamentPopupProps) {
   const [availableBrackets, setAvailableBrackets] = useState<BracketData[]>([]);
   const [selectedBracket, setSelectedBracket] = useState<number>(-1);
+  const [errorText, setErrorText] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleBracketChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -44,44 +46,30 @@ export default function CreateTournamentPopup({
   }, []);
 
   return (
-    <div className={styles.popupDarkenator}>
-      <div className={styles.popupBody}>
-        <div className={styles.topSection}>
-          <text className={styles.createHeaderText}>Create Tournament</text>
-          <button
-            className={styles.closeButton}
-            disabled={isLoading}
-            onClick={() => handlePopupClosed(null)}
-          >
-            X
-          </button>
-        </div>
-        <select
-          id="dropdown"
-          name="dropdown"
-          className={styles.dropdownSelect}
-          onChange={handleBracketChange}
-          value={selectedBracket}
-          disabled={isLoading}
-        >
-          <option hidden value={-1}>
-            Select...
-          </option>
-          {availableBrackets.map((bracket) => (
-            <option value={bracket.id}>{bracket.bracket_name}</option>
-          ))}
-        </select>
-        <div className={styles.spacer}></div>
-        <div className={styles.bottomArea}>
-          <button
-            className={styles.createButton}
-            onClick={() => handleCreateClicked()}
-            disabled={isLoading}
-          >
-            {isLoading ? <LoadingSpinner /> : 'Create'}
-          </button>
-        </div>
-      </div>
-    </div>
+    <PopupTemplate
+      title="Create Tournament"
+      submitButtonText="Create"
+      loading={isLoading}
+      disabled={isLoading}
+      errorText={errorText}
+      handlePopupClosed={() => handlePopupClosed(null)}
+      handleSubmit={() => handleCreateClicked()}
+    >
+      <select
+        id="dropdown"
+        name="dropdown"
+        className={styles.dropdownSelect}
+        onChange={handleBracketChange}
+        value={selectedBracket}
+        disabled={isLoading}
+      >
+        <option hidden value={-1}>
+          Select...
+        </option>
+        {availableBrackets.map((bracket) => (
+          <option value={bracket.id}>{bracket.bracket_name}</option>
+        ))}
+      </select>
+    </PopupTemplate>
   );
 }
