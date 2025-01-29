@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './CreateTournamentPopup.css';
 import { getRequest, postRequest } from '../../utils/routes';
-import { BracketData } from '@playoff-bracket-app/database';
+import { BracketData, TournamentData } from '@playoff-bracket-app/database';
 import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
 
 type CreateTournamentPopupProps = {
-  handlePopupClosed: (tournamentId: number | null) => void;
+  handlePopupClosed: (tournament: TournamentData | null) => void;
 };
 
 export default function CreateTournamentPopup({
@@ -27,7 +27,10 @@ export default function CreateTournamentPopup({
     setIsLoading(true);
     const response = await postRequest('/api/v1/tournament/create');
     const json = await response.json();
-    handlePopupClosed(json.data.tournamentId);
+    handlePopupClosed({
+      tournamentId: json.data.tournamentId,
+      bracketName: json.data.bracketName,
+    });
   };
 
   useEffect(() => {

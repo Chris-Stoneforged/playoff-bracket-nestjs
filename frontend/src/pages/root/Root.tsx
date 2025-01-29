@@ -45,7 +45,7 @@ export default function Root() {
 
   return (
     <div className="root-div">
-      <userContext.Provider value={user}>
+      <userContext.Provider value={{ user, setUser }}>
         <HeaderBar user={user} handleLogout={handleLogoutClick}></HeaderBar>
         <div className="main-content">
           <Outlet />

@@ -1,4 +1,4 @@
-import { Params } from 'react-router-dom';
+import { Params, redirect } from 'react-router-dom';
 import { getRequest } from './routes';
 
 export async function tournamentDetailLoader({
@@ -6,9 +6,18 @@ export async function tournamentDetailLoader({
 }: {
   params: Params<'tournamentId'>;
 }) {
-  const response = await getRequest(
-    `/api/v1/tournament/${params.tournamentId}`
-  );
-  const data = await response.json();
-  return data.data;
+  try {
+    const response = await getRequest(
+      `/api/v1/tournament/${params.tournamentId}`
+    );
+
+    if (response.status === 401) {
+      return redirect('/login');
+    }
+
+    const data = await response.json();
+    return data.data;
+  } catch (e) {
+    throw new Error(`Something went wrong: ${e}`);
+  }
 }

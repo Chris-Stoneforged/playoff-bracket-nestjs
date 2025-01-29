@@ -1,28 +1,32 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { TournamentData } from '@playoff-bracket-app/database';
 import './TournamentList.css';
 import CreateTournamentPopup from '../createTournamentPopup/CreateTournamentPopup';
+import userContext, { UserDataContext } from '../../utils/context';
+import { useNavigate } from 'react-router-dom';
 
-type TournamentListProps = {
-  tournaments: TournamentData[];
-  handleClick: (tournamentId: number) => void;
-};
-
-export default function TournamentList({
-  tournaments,
-  handleClick,
-}: TournamentListProps) {
+export default function TournamentList() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const handlePopupClosed = (tournamentId: number | null) => {
+  const { user, setUser }: UserDataContext = useContext(userContext);
+  if (user === null || setUser === null) {
+    return null;
+  }
+
+  const handleTournamentClicked = (tournamentId: number) => {
+    navigate(`/tournament/${tournamentId}`);
+  };
+
+  const handlePopupClosed = (tournament: TournamentData | null) => {
     setIsCreatePopupOpen(false);
-    if (tournamentId === null) {
+    if (tournament === null) {
       return;
     }
 
-    console.log(tournamentId);
-    handleClick(tournamentId);
+    handleTournamentClicked(tournament.tournamentId);
+    setUser({ ...user, tournaments: [...user.tournaments, tournament] });
   };
 
   return (
@@ -39,10 +43,10 @@ export default function TournamentList({
         </text>
       </div>
       <div className="tournament-list">
-        {tournaments.map((tournament) => (
+        {user.tournaments.map((tournament) => (
           <button
             className="tournament-item"
-            onClick={() => handleClick(tournament.tournamentId)}
+            onClick={() => handleTournamentClicked(tournament.tournamentId)}
           >
             <div className="tournament-item-content">
               {tournament.bracketName}
