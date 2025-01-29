@@ -9,7 +9,7 @@
   flex-shrink: 0;
 }
 
-.user-section {
+.userSection {
   display: flex;
   height: 24px;
   justify-content: right;
@@ -17,7 +17,7 @@
   align-items: center;
 }
 
-.user-name-text {
+.userNameText {
   padding-right: 8px;
   color: white;
   align-self: center;
@@ -33,7 +33,7 @@
   height: 42px;
 }
 
-.title-section {
+.titleSection {
   display: flex;
   justify-content: left;
   width: 300px;

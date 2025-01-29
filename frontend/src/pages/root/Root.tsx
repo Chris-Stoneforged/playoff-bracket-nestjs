@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { isLoggedIn } from '../../utils/loginUtils';
-import './Root.css';
+import styles from './Root.module.css';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserData } from '@playoff-bracket-app/database';
 import { getRequest, postRequest, routes } from '../../utils/routes';
@@ -44,10 +44,10 @@ export default function Root() {
   }, [location.state, navigate]);
 
   return (
-    <div className="root-div">
+    <div className={styles.rootDiv}>
       <userContext.Provider value={{ user, setUser }}>
         <HeaderBar user={user} handleLogout={handleLogoutClick}></HeaderBar>
-        <div className="main-content">
+        <div className={styles.mainContent}>
           <Outlet />
         </div>
       </userContext.Provider>

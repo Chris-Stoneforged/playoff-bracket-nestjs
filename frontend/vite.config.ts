@@ -20,7 +20,11 @@ export default defineConfig({
     port: 4300,
     host: 'localhost',
   },
-
+  css: {
+    modules: {
+      scopeBehaviour: 'local',
+    },
+  },
   plugins: [react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
 
   build: {

@@ -18,7 +18,7 @@
   }
 }
 
-.popup-darkenator {
+.popupDarkenator {
   position: fixed;
   top: 0;
   left: 0;
@@ -32,7 +32,7 @@
   animation: darkenator-fade 0.1s linear;
 }
 
-.popup-body {
+.popupBody {
   position: relative;
   width: 400px;
   background-color: white;
@@ -44,7 +44,7 @@
   flex-shrink: 0;
 }
 
-.top-section {
+.topSection {
   width: 100%;
   display: flex;
   align-items: center;
@@ -53,42 +53,36 @@
   margin-bottom: 32px;
 }
 
-.create-header-text {
+.joinHeaderText {
   font-size: large;
   right: 50%;
   transform: translateX(100%);
 }
 
-.close-button {
+.closeButton {
   width: 30px;
   height: 30px;
 }
 
-.dropdown-select {
+.inviteCodeInput {
   width: 100%;
   padding: 8px;
   font-size: 14px;
-  color: #333;
+  color: black;
   background-color: white;
   border: 2px solid #1e488b;
   border-radius: 5px;
-  cursor: pointer;
-  margin-top: 4px;
   margin-bottom: 32px;
+  box-sizing: border-box;
 }
 
-.dropdown-select:focus {
-  outline: none;
-  border-color: #1e488b;
-}
-
-.bottom-area {
+.bottomArea {
   display: flex;
   width: 100%;
   justify-content: center;
 }
 
-.do-create-button {
+.joinButton {
   width: 200px;
   height: 40px;
   display: flex;

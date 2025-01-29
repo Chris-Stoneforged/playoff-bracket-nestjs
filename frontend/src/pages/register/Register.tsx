@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Register.css';
+import styles from './Register.module.css';
 import { useNavigate } from 'react-router-dom';
 import { postRequest, routes } from '../../utils/routes';
 import { isLoggedIn } from '../../utils/loginUtils';

@@ -1,4 +1,4 @@
-.tournament-column {
+.tournamentColumn {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,11 +12,11 @@
   flex-shrink: 0;
 }
 
-.tournament-column.open {
+.open {
   width: 300px;
 }
 
-.list-header {
+.listHeader {
   width: 100%;
   display: flex;
   align-items: center;
@@ -24,11 +24,11 @@
   position: relative;
 }
 
-.expand-button {
+.expandButton {
   margin-right: auto;
 }
 
-.header-text {
+.headerText {
   left: 50%;
   transform: translateX(-50%);
   opacity: 0;
@@ -36,13 +36,13 @@
   pointer-events: none;
 }
 
-.tournament-column.open .header-text {
+.open .headertext {
   opacity: 1;
   transition: opacity 0.1s linear 0.1s;
   pointer-events: auto;
 }
 
-.tournament-list {
+.tournamentList {
   width: 100%;
   list-style-position: inside;
   margin-top: 8px;
@@ -51,25 +51,25 @@
   pointer-events: none;
 }
 
-.tournament-column.open .tournament-list {
+.open .tournamentList {
   opacity: 1;
   transition: opacity 0.1s linear 0.1s;
   pointer-events: auto;
 }
 
-.tournament-item {
+.tournamentItem {
   width: 100%;
   height: 50px;
   margin-top: 6px;
 }
 
-.tournament-item-content {
+.tournamentItemContent {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.tournament-item-sub-text {
+.tournamentItemSubText {
   font-size: xx-small;
   color: rgb(218, 218, 218);
   margin-top: 4px;
@@ -80,18 +80,24 @@
   min-height: 0;
 }
 
-.create-button {
-  margin-bottom: 16px;
-  margin-top: 16px;
-  width: 150px;
-  height: 40px;
+.bottomButtons {
+  display: flex;
+  justify-content: center;
   transition: none;
   opacity: 0;
   pointer-events: none;
 }
 
-.tournament-column.open .create-button {
+.open .bottomButtons {
   opacity: 1;
   transition: opacity 0.1s linear 0.1s;
   pointer-events: auto;
+}
+
+.bottomButton {
+  margin: 4px;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  width: 150px;
+  height: 40px;
 }

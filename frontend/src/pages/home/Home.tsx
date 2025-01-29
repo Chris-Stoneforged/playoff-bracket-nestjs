@@ -1,6 +1,6 @@
 import TournamentList from '../../components/tournamentList/TournamentList';
 import React, { useContext } from 'react';
-import './Home.css';
+import styles from './Home.module.css';
 import userContext, { UserDataContext } from '../../utils/context';
 import { Outlet } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ export default function Home() {
   }
 
   return (
-    <div className="main">
+    <div className={styles.main}>
       <TournamentList />
       {user.tournaments.length ? (
         <Outlet />

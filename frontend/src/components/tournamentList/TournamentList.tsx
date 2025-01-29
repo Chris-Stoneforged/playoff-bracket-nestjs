@@ -1,13 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { TournamentData } from '@playoff-bracket-app/database';
-import './TournamentList.css';
+import styles from './TournamentList.module.css';
 import CreateTournamentPopup from '../createTournamentPopup/CreateTournamentPopup';
 import userContext, { UserDataContext } from '../../utils/context';
 import { useNavigate } from 'react-router-dom';
+import JoinTournamentPopup from '../joinTournamentPopup/JoinTournamentPopup';
 
 export default function TournamentList() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
+  const [isJoinPopupOpen, setIsJoinPopupOpen] = useState(false);
   const navigate = useNavigate();
 
   const { user, setUser }: UserDataContext = useContext(userContext);
@@ -21,6 +23,8 @@ export default function TournamentList() {
 
   const handlePopupClosed = (tournament: TournamentData | null) => {
     setIsCreatePopupOpen(false);
+    setIsJoinPopupOpen(false);
+
     if (tournament === null) {
       return;
     }
@@ -30,42 +34,56 @@ export default function TournamentList() {
   };
 
   return (
-    <div className={`tournament-column ${isExpanded ? 'open' : ''}`}>
-      <div className="list-header">
+    <div
+      className={`${styles.tournamentColumn} ${isExpanded ? styles.open : ''}`}
+    >
+      <div className={styles.listHeader}>
         <button
-          className="expand-button"
+          className={styles.expandButton}
           onClick={() => setIsExpanded(!isExpanded)}
         >
           {isExpanded ? '<' : '>'}
         </button>
-        <text className="header-text">
+        <text className={styles.headerText}>
           {isExpanded ? 'My Tournaments' : ''}
         </text>
       </div>
-      <div className="tournament-list">
+      <div className={styles.tournamentList}>
         {user.tournaments.map((tournament) => (
           <button
-            className="tournament-item"
+            className={styles.tournamentItem}
             onClick={() => handleTournamentClicked(tournament.tournamentId)}
           >
-            <div className="tournament-item-content">
+            <div className={styles.tournamentItemContent}>
               {tournament.bracketName}
-              <text className="tournament-item-sub-text">
+              <text className={styles.tournamentItemSubText}>
                 With Kenny, Cam, Ash...
               </text>
             </div>
           </button>
         ))}
       </div>
-      <div className="spacer"></div>
-      <button
-        className="create-button"
-        onClick={() => setIsCreatePopupOpen(true)}
-      >
-        Create Tournament
-      </button>
+      <div className={styles.spacer}></div>
+      <div className={styles.bottomButtons}>
+        <button
+          className={styles.bottomButton}
+          onClick={() => setIsCreatePopupOpen(true)}
+        >
+          Create
+        </button>
+        <button
+          className={styles.bottomButton}
+          onClick={() => setIsJoinPopupOpen(true)}
+        >
+          Join
+        </button>
+      </div>
+
       {isCreatePopupOpen && (
         <CreateTournamentPopup handlePopupClosed={handlePopupClosed} />
+      )}
+      {isJoinPopupOpen && (
+        <JoinTournamentPopup handlePopupClosed={handlePopupClosed} />
       )}
     </div>
   );

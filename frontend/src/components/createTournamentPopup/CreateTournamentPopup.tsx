@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './CreateTournamentPopup.css';
+import styles from './CreateTournamentPopup.module.css';
 import { getRequest, postRequest } from '../../utils/routes';
 import { BracketData, TournamentData } from '@playoff-bracket-app/database';
 import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
@@ -44,12 +44,12 @@ export default function CreateTournamentPopup({
   }, []);
 
   return (
-    <div className="popup-darkenator">
-      <div className="popup-body">
-        <div className="top-section">
-          <text className="create-header-text">Create Tournament</text>
+    <div className={styles.popupDarkenator}>
+      <div className={styles.popupBody}>
+        <div className={styles.topSection}>
+          <text className={styles.createHeaderText}>Create Tournament</text>
           <button
-            className="close-button"
+            className={styles.closeButton}
             disabled={isLoading}
             onClick={() => handlePopupClosed(null)}
           >
@@ -59,7 +59,7 @@ export default function CreateTournamentPopup({
         <select
           id="dropdown"
           name="dropdown"
-          className="dropdown-select"
+          className={styles.dropdownSelect}
           onChange={handleBracketChange}
           value={selectedBracket}
           disabled={isLoading}
@@ -71,10 +71,10 @@ export default function CreateTournamentPopup({
             <option value={bracket.id}>{bracket.bracket_name}</option>
           ))}
         </select>
-        <div className="spacer"></div>
-        <div className="bottom-area">
+        <div className={styles.spacer}></div>
+        <div className={styles.bottomArea}>
           <button
-            className="do-create-button"
+            className={styles.createButton}
             onClick={() => handleCreateClicked()}
             disabled={isLoading}
           >
