@@ -5,7 +5,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserData } from '@playoff-bracket-app/database';
 import { getRequest, postRequest, routes } from '../../utils/routes';
 import HeaderBar from '../../components/headerBar/HeaderBar';
-import userContext from '../../utils/context';
+import { userContext } from '../../utils/context';
 
 export default function Root() {
   const navigate = useNavigate();

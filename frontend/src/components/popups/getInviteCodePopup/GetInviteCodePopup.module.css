@@ -1,0 +1,16 @@
+.inviteCodeSection {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inviteCodeText {
+  font-size: large;
+}
+
+.copyButton {
+  height: 30px;
+  margin-left: 16px;
+  padding: 4px;
+}

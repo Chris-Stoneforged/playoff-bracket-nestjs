@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './CreateTournamentPopup.module.css';
-import { getRequest, postRequest } from '../../utils/routes';
+import { getRequest, postRequest } from '../../../utils/routes';
 import { BracketData, TournamentData } from '@playoff-bracket-app/database';
-import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
-import PopupTemplate from '../popupTemplate/popupTemplate';
+import LoadingSpinner from '../../loadingSpinner/LoadingSpinner';
+import PopupWithSubmit from '../popupTemplate/PopupWithSubmit';
 
 type CreateTournamentPopupProps = {
   handlePopupClosed: (tournament: TournamentData | null) => void;
@@ -46,7 +46,7 @@ export default function CreateTournamentPopup({
   }, []);
 
   return (
-    <PopupTemplate
+    <PopupWithSubmit
       title="Create Tournament"
       submitButtonText="Create"
       loading={isLoading}
@@ -70,6 +70,6 @@ export default function CreateTournamentPopup({
           <option value={bracket.id}>{bracket.bracket_name}</option>
         ))}
       </select>
-    </PopupTemplate>
+    </PopupWithSubmit>
   );
 }

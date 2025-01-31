@@ -11,4 +11,6 @@ const userContext = createContext<UserDataContext>({
   setUser: null,
 });
 
-export default userContext;
+const tournamentContext = createContext<number>(0);
+
+export { userContext, tournamentContext };

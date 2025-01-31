@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './JoinTournamentPopup.module.css';
 import { TournamentData } from '@playoff-bracket-app/database';
-import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
-import PopupTemplate from '../popupTemplate/popupTemplate';
+import LoadingSpinner from '../../loadingSpinner/LoadingSpinner';
+import PopupWithSubmit from '../popupTemplate/PopupWithSubmit';
 
 type JoinTournamentPopupProps = {
   handlePopupClosed: (tournament: TournamentData | null) => void;
@@ -27,7 +27,7 @@ export default function JoinTournamentPopup({
   };
 
   return (
-    <PopupTemplate
+    <PopupWithSubmit
       title="Join Tournament"
       submitButtonText="Join"
       loading={isLoading}
@@ -43,6 +43,6 @@ export default function JoinTournamentPopup({
         onInput={handleCodeChanged}
         className={styles.inviteCodeInput}
       ></input>
-    </PopupTemplate>
+    </PopupWithSubmit>
   );
 }

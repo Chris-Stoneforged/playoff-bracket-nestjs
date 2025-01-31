@@ -1,7 +1,7 @@
 import TournamentList from '../../components/tournamentList/TournamentList';
 import React, { useContext } from 'react';
 import styles from './Home.module.css';
-import userContext, { UserDataContext } from '../../utils/context';
+import { userContext, UserDataContext } from '../../utils/context';
 import { Outlet } from 'react-router-dom';
 
 export default function Home() {

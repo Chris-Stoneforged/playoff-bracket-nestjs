@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { TournamentData } from '@playoff-bracket-app/database';
 import styles from './TournamentList.module.css';
-import CreateTournamentPopup from '../createTournamentPopup/CreateTournamentPopup';
-import userContext, { UserDataContext } from '../../utils/context';
+import CreateTournamentPopup from '../popups/createTournamentPopup/CreateTournamentPopup';
+import { userContext, UserDataContext } from '../../utils/context';
 import { useNavigate } from 'react-router-dom';
-import JoinTournamentPopup from '../joinTournamentPopup/JoinTournamentPopup';
+import JoinTournamentPopup from '../popups/joinTournamentPopup/JoinTournamentPopup';
 
 export default function TournamentList() {
   const [isExpanded, setIsExpanded] = useState(true);

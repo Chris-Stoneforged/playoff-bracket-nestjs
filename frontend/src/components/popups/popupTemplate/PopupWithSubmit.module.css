@@ -1,0 +1,25 @@
+.bottomArea {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.submitButton {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.errorArea {
+  display: flex;
+  justify-content: center;
+  color: red;
+  margin-top: 8px;
+}
+
+.popupContent {
+  width: 100%;
+  box-sizing: border-box;
+}
