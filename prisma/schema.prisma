@@ -74,7 +74,7 @@ model Prediction {
   user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   matchup_id      Int           
   tournament_id   Int
-  tournament      Tournament    @relation(fields: [tournament_id], references: [id])
+  tournament      Tournament    @relation(fields: [tournament_id], references: [id], onDelete: Cascade)
   bracket_id      Int           
   matchup         Matchup       @relation(fields: [matchup_id, bracket_id], references: [id, bracket_id])
   winner          String
