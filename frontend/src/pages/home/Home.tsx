@@ -1,5 +1,5 @@
 import TournamentList from '../../components/tournamentList/TournamentList';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styles from './Home.module.css';
 import { userContext, UserDataContext } from '../../utils/context';
 import { Outlet } from 'react-router-dom';
@@ -13,10 +13,12 @@ export default function Home() {
   return (
     <div className={styles.main}>
       <TournamentList />
-      {user.tournaments.length ? (
+      {user.tournaments?.length ? (
         <Outlet />
       ) : (
-        <div>Select or create a tournament to get started</div>
+        <div className={styles.noTournamentDefault}>
+          <p>Create or join a tournament to get started!</p>
+        </div>
       )}
     </div>
   );

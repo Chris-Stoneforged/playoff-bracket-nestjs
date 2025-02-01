@@ -14,6 +14,9 @@ export async function tournamentDetailLoader({
     if (response.status === 401) {
       return redirect('/login');
     }
+    if (response.status !== 200) {
+      return redirect('/');
+    }
 
     const data = await response.json();
     return data.data;

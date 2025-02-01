@@ -12,6 +12,7 @@ export default function Register() {
 
   useEffect(() => {
     if (isLoggedIn()) {
+      throw Error('User was logged IN?');
       navigate('/', { replace: true });
     }
   });
