@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './TournamentSettingsMenu.module.css';
 import GetInviteCodePopup from '../popups/getInviteCodePopup/GetInviteCodePopup';
+import LeaveTournamentPopup from '../popups/leaveTournamentPopup/LeaveTournamentPopup';
 
 export default function TournamentSettingsMenu() {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [isInviteCodePopupOpen, setIsInviteCodePopupOpen] = useState(false);
+  const [isLeaveTournamentPopupOpen, setIsLeaveTournamentPopupOpen] =
+    useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
   const settingsButton = useRef<HTMLButtonElement>(null);
@@ -24,7 +27,8 @@ export default function TournamentSettingsMenu() {
   };
 
   const handleLeaveTournamentClicked = () => {
-    //
+    setIsLeaveTournamentPopupOpen(true);
+    setIsSettingsMenuOpen(false);
   };
 
   useEffect(() => {
@@ -88,6 +92,11 @@ export default function TournamentSettingsMenu() {
         <GetInviteCodePopup
           handlePopupClosed={() => setIsInviteCodePopupOpen(false)}
         ></GetInviteCodePopup>
+      )}
+      {isLeaveTournamentPopupOpen && (
+        <LeaveTournamentPopup
+          handlePopupClosed={() => setIsLeaveTournamentPopupOpen(false)}
+        ></LeaveTournamentPopup>
       )}
     </div>
   );

@@ -1,0 +1,9 @@
+.leaveText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  font-size: large;
+  margin-bottom: 32px;
+  margin-top: 32px;
+}

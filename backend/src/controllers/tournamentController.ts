@@ -84,12 +84,15 @@ export async function leaveTournament(request: Request, response: Response) {
     },
   });
 
-  if (
-    !tournament ||
-    !tournament.users.some((user) => user.id === request.user.id)
-  ) {
+  if (!tournament) {
     throw new BadRequestError('Could not find tournament with specified Id');
   }
+  if (!tournament.users.some((user) => user.id === request.user.id)) {
+    throw new BadRequestError('Cannot leave - user is not in tournament');
+  }
+
+  // This user is the last one. once they leave, clean up the tournament
+  const tournamentRequiresDeletion: boolean = tournament.users.length === 1;
 
   await prismaClient.user.update({
     where: {
@@ -104,14 +107,13 @@ export async function leaveTournament(request: Request, response: Response) {
     },
   });
 
-  await prismaClient.tournament.delete({
-    where: {
-      id: tournament.id,
-      users: {
-        none: {},
+  if (tournamentRequiresDeletion) {
+    await prismaClient.tournament.delete({
+      where: {
+        id: tournament.id,
       },
-    },
-  });
+    });
+  }
 
   response.status(200).json({
     success: true,
