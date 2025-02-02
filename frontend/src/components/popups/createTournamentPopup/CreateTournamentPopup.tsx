@@ -23,6 +23,7 @@ export default function CreateTournamentPopup({
 
   const handleCreateClicked = async () => {
     if (selectedBracket < 0) {
+      setErrorText('Must select a bracket');
       return;
     }
 
@@ -32,6 +33,7 @@ export default function CreateTournamentPopup({
     handlePopupClosed({
       tournamentId: json.data.tournamentId,
       bracketName: json.data.bracketName,
+      memberData: [],
     });
   };
 

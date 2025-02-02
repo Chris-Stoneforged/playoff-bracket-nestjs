@@ -64,6 +64,10 @@
   margin-top: 6px;
 }
 
+.selected {
+  border-color: red;
+}
+
 .tournamentItemContent {
   display: flex;
   flex-direction: column;

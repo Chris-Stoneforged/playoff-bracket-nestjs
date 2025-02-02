@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TournamentData } from '@playoff-bracket-app/database';
 import styles from './TournamentList.module.css';
 import CreateTournamentPopup from '../popups/createTournamentPopup/CreateTournamentPopup';
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import JoinTournamentPopup from '../popups/joinTournamentPopup/JoinTournamentPopup';
 
 export default function TournamentList() {
+  const [selectedTournament, setSelectedTournament] = useState(-1);
   const [isExpanded, setIsExpanded] = useState(true);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isJoinPopupOpen, setIsJoinPopupOpen] = useState(false);
@@ -18,6 +19,8 @@ export default function TournamentList() {
   }
 
   const handleTournamentClicked = (tournamentId: number) => {
+    setSelectedTournament(tournamentId);
+    console.log(`Selected tournament is now ${selectedTournament}`);
     navigate(`/tournament/${tournamentId}`);
   };
 
@@ -68,7 +71,11 @@ export default function TournamentList() {
       <div className={styles.tournamentList}>
         {user.tournaments.map((tournament) => (
           <button
-            className={styles.tournamentItem}
+            className={`${styles.tournamentItem} ${
+              tournament.tournamentId === selectedTournament
+                ? styles.selected
+                : ''
+            }`}
             onClick={() => handleTournamentClicked(tournament.tournamentId)}
           >
             <div className={styles.tournamentItemContent}>
