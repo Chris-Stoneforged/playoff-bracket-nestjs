@@ -68,7 +68,12 @@ export default function Login() {
         </form>
         <p className={styles.registerLinkArea}>
           Don't have an account?{' '}
-          <button onClick={() => navigate('/register')}>Register now.</button>
+          <button
+            className={styles.registerButton}
+            onClick={() => navigate('/register')}
+          >
+            Register now.
+          </button>
         </p>
       </div>
     </div>
