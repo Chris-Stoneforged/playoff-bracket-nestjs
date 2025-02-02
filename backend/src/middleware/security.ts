@@ -7,7 +7,7 @@ export default async function securityHeaders(
 ) {
   response.setHeader(
     'Content-Security-Policy',
-    "script-src 'self' object-src 'none' style-src 'self' default-src 'self' frame-ancestors 'self' img-src 'self'"
+    `default-src 'self'; script-src 'self'; object-src 'none'; style-src 'self'; frame-ancestors 'self'; img-src 'self'`
   );
   response.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   response.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
