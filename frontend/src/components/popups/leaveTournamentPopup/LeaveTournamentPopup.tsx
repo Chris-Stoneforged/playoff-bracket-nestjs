@@ -3,6 +3,7 @@ import styles from './LeaveTournamentPopup.module.css';
 import PopupWithSubmit from '../popupTemplate/PopupWithSubmit';
 import { tournamentContext, userContext } from '../../../utils/context';
 import { postRequest } from '../../../utils/routes';
+import { useNavigate } from 'react-router-dom';
 
 type LeaveTournamentPopupProps = {
   handlePopupClosed: () => void;
@@ -11,6 +12,7 @@ type LeaveTournamentPopupProps = {
 export default function LeaveTournamentPopup({
   handlePopupClosed,
 }: LeaveTournamentPopupProps) {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
   const tournamentId = useContext(tournamentContext);
@@ -39,6 +41,7 @@ export default function LeaveTournamentPopup({
     });
 
     handlePopupClosed();
+    navigate('/');
   };
 
   return (

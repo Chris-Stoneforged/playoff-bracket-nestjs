@@ -7,16 +7,12 @@ export type UserData = {
 export type TournamentData = {
   tournamentId: number;
   bracketName: string;
+  memberData: MemberData[];
 };
 
 export type MemberData = {
   id: number;
   nickname: string;
-  score: number;
-};
-
-export type TournamentDetailedData = TournamentData & {
-  memberData: MemberData[];
 };
 
 export type BracketData = {

@@ -33,6 +33,23 @@ export default function TournamentList() {
     setUser({ ...user, tournaments: [...user.tournaments, tournament] });
   };
 
+  // Memoize lables
+  const memberLabels: Map<number, string> = new Map();
+  user.tournaments.forEach((t) => {
+    const otherMembers = t.memberData.filter((m) => m.id !== user.userId);
+    let label: string;
+    if (otherMembers.length === 0) {
+      label = 'Just You';
+    } else if (otherMembers.length === 1) {
+      label = `With ${otherMembers[0].nickname}`;
+    } else if (otherMembers.length === 2) {
+      label = `With ${otherMembers[0].nickname} and ${otherMembers[1].nickname}`;
+    } else {
+      label = `With ${otherMembers[0].nickname}, ${otherMembers[1].nickname}, ...`;
+    }
+    memberLabels.set(t.tournamentId, label);
+  });
+
   return (
     <div
       className={`${styles.tournamentColumn} ${isExpanded ? styles.open : ''}`}
@@ -57,7 +74,7 @@ export default function TournamentList() {
             <div className={styles.tournamentItemContent}>
               {tournament.bracketName}
               <text className={styles.tournamentItemSubText}>
-                With Kenny, Cam, Ash...
+                {memberLabels.get(tournament.tournamentId)}
               </text>
             </div>
           </button>

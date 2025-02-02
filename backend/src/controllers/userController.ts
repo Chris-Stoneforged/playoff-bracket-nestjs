@@ -78,6 +78,7 @@ export async function login(
       tournaments: {
         include: {
           bracket: true,
+          users: true,
         },
       },
     },
@@ -90,6 +91,9 @@ export async function login(
       return {
         tournamentId: tournament.id,
         bracketName: tournament.bracket.bracket_name,
+        memberData: tournament.users.map((u) => {
+          return { id: u.id, nickname: u.nickname };
+        }),
       };
     }),
   };
@@ -127,6 +131,7 @@ export async function getUserData(request: Request, response: Response) {
       tournaments: {
         include: {
           bracket: true,
+          users: true,
         },
       },
     },
@@ -139,6 +144,9 @@ export async function getUserData(request: Request, response: Response) {
       return {
         tournamentId: tournament.id,
         bracketName: tournament.bracket.bracket_name,
+        memberData: tournament.users.map((u) => {
+          return { id: u.id, nickname: u.nickname };
+        }),
       };
     }),
   };
