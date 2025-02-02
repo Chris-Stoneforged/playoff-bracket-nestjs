@@ -136,6 +136,10 @@ export async function getInviteCodeInfo(request: Request, response: Response) {
     throw new BadRequestError('Invalid invite code');
   }
 
+  if (inviteToken.sender_id === request.user.id) {
+    throw new BadRequestError('You are the sender');
+  }
+
   if (inviteToken.expiry <= new Date(Date.now())) {
     await prismaClient.inviteToken.delete({
       where: {
