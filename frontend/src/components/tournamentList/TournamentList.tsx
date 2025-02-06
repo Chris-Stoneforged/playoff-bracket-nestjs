@@ -1,44 +1,25 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { TournamentData } from '@playoff-bracket-app/database';
+import React, { useContext, useState } from 'react';
+import { TournamentData, UserData } from '@playoff-bracket-app/database';
 import styles from './TournamentList.module.css';
 import CreateTournamentPopup from '../popups/createTournamentPopup/CreateTournamentPopup';
-import { userContext, UserDataContext } from '../../utils/context';
-import { useNavigate } from 'react-router-dom';
+import { tournamentContext, userContext } from '../../utils/context';
 import JoinTournamentPopup from '../popups/joinTournamentPopup/JoinTournamentPopup';
 
-export default function TournamentList() {
-  const [selectedTournament, setSelectedTournament] = useState(-1);
+export type TournamentListProps = {
+  tournaments: TournamentData[];
+};
+
+export default function TournamentList({ tournaments }: TournamentListProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isJoinPopupOpen, setIsJoinPopupOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const { user, setUser }: UserDataContext = useContext(userContext);
-  if (user === null || setUser === null) {
-    return null;
-  }
-
-  const handleTournamentClicked = (tournamentId: number) => {
-    setSelectedTournament(tournamentId);
-    console.log(`Selected tournament is now ${selectedTournament}`);
-    navigate(`/tournament/${tournamentId}`);
-  };
-
-  const handlePopupClosed = (tournament: TournamentData | null) => {
-    setIsCreatePopupOpen(false);
-    setIsJoinPopupOpen(false);
-
-    if (tournament === null) {
-      return;
-    }
-
-    handleTournamentClicked(tournament.tournamentId);
-    setUser({ ...user, tournaments: [...user.tournaments, tournament] });
-  };
+  const { currentTournamentId, handleTournamentsChanged } =
+    useContext(tournamentContext);
+  const user: UserData = useContext(userContext);
 
   // Memoize lables
   const memberLabels: Map<number, string> = new Map();
-  user.tournaments.forEach((t) => {
+  tournaments.forEach((t) => {
     const otherMembers = t.memberData.filter((m) => m.id !== user.userId);
     let label: string;
     if (otherMembers.length === 0) {
@@ -69,14 +50,14 @@ export default function TournamentList() {
         </text>
       </div>
       <div className={styles.tournamentList}>
-        {user.tournaments.map((tournament) => (
+        {tournaments.map((tournament) => (
           <button
             className={`${styles.tournamentItem} ${
-              tournament.tournamentId === selectedTournament
+              tournament.tournamentId === currentTournamentId
                 ? styles.selected
                 : ''
             }`}
-            onClick={() => handleTournamentClicked(tournament.tournamentId)}
+            onClick={() => handleTournamentsChanged(tournament, 'Selected')}
           >
             <div className={styles.tournamentItemContent}>
               {tournament.bracketName}
@@ -104,10 +85,14 @@ export default function TournamentList() {
       </div>
 
       {isCreatePopupOpen && (
-        <CreateTournamentPopup handlePopupClosed={handlePopupClosed} />
+        <CreateTournamentPopup
+          handlePopupClosed={() => setIsCreatePopupOpen(false)}
+        />
       )}
       {isJoinPopupOpen && (
-        <JoinTournamentPopup handlePopupClosed={handlePopupClosed} />
+        <JoinTournamentPopup
+          handlePopupClosed={() => setIsJoinPopupOpen(false)}
+        />
       )}
     </div>
   );

@@ -6,21 +6,20 @@ export async function tournamentDetailLoader({
 }: {
   params: Params<'tournamentId'>;
 }) {
-  try {
-    const response = await getRequest(
-      `/api/v1/tournament/${params.tournamentId}`
-    );
+  const response = await getRequest(
+    `/api/v1/tournament/${params.tournamentId}`
+  );
 
-    if (response.status === 401) {
-      return redirect('/login');
-    }
-    if (response.status !== 200) {
-      return redirect('/');
-    }
-
-    const data = await response.json();
-    return data.data;
-  } catch (e) {
-    throw new Error(`Something went wrong: ${e}`);
+  if (response.status === 401) {
+    return redirect('/login');
   }
+  if (response.status !== 200) {
+    throw new Response('', {
+      status: 404,
+      statusText: 'Not Found',
+    });
+  }
+
+  const data = await response.json();
+  return data.data;
 }

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './CreateTournamentPopup.module.css';
 import { getRequest, postRequest } from '../../../utils/routes';
-import { BracketData, TournamentData } from '@playoff-bracket-app/database';
-import LoadingSpinner from '../../loadingSpinner/LoadingSpinner';
+import { BracketData } from '@playoff-bracket-app/database';
 import PopupWithSubmit from '../popupTemplate/PopupWithSubmit';
+import { tournamentContext } from '../../../utils/context';
 
 type CreateTournamentPopupProps = {
-  handlePopupClosed: (tournament: TournamentData | null) => void;
+  handlePopupClosed: () => void;
 };
 
 export default function CreateTournamentPopup({
@@ -16,6 +16,7 @@ export default function CreateTournamentPopup({
   const [selectedBracket, setSelectedBracket] = useState<number>(-1);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { handleTournamentsChanged } = useContext(tournamentContext);
 
   const handleBracketChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedBracket(Number.parseInt(event.target.value));
@@ -29,12 +30,16 @@ export default function CreateTournamentPopup({
 
     setIsLoading(true);
     const response = await postRequest('/api/v1/tournament/create');
-    const json = await response.json();
-    handlePopupClosed({
-      tournamentId: json.data.tournamentId,
-      bracketName: json.data.bracketName,
-      memberData: [],
-    });
+    const responseData = await response.json();
+    handleTournamentsChanged(
+      {
+        tournamentId: responseData.data.tournamentId,
+        bracketName: responseData.data.bracketName,
+        memberData: responseData.data.memberData,
+      },
+      'Added'
+    );
+    handlePopupClosed();
   };
 
   useEffect(() => {
@@ -54,7 +59,7 @@ export default function CreateTournamentPopup({
       loading={isLoading}
       disabled={isLoading}
       errorText={errorText}
-      handlePopupClosed={() => handlePopupClosed(null)}
+      handlePopupClosed={handlePopupClosed}
       handleSubmit={() => handleCreateClicked()}
     >
       <select

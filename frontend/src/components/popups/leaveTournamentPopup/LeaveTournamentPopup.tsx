@@ -4,6 +4,7 @@ import PopupWithSubmit from '../popupTemplate/PopupWithSubmit';
 import { tournamentContext, userContext } from '../../../utils/context';
 import { postRequest } from '../../../utils/routes';
 import { useNavigate } from 'react-router-dom';
+import { UserData } from '@playoff-bracket-app/database';
 
 type LeaveTournamentPopupProps = {
   handlePopupClosed: () => void;
@@ -15,16 +16,13 @@ export default function LeaveTournamentPopup({
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
-  const tournamentId = useContext(tournamentContext);
-  const { user, setUser } = useContext(userContext);
-  if (user === null || setUser === null) {
-    throw Error('Invalid user');
-  }
+  const { currentTournamentId, handleTournamentsChanged } =
+    useContext(tournamentContext);
 
   const handleSubmitClicked = async () => {
     setIsLoading(true);
     const response = await postRequest(
-      `/api/v1/tournament/${tournamentId}/leave`
+      `/api/v1/tournament/${currentTournamentId}/leave`
     );
 
     if (response.status !== 200) {
@@ -33,15 +31,10 @@ export default function LeaveTournamentPopup({
       return;
     }
 
-    setUser({
-      ...user,
-      tournaments: user.tournaments.filter(
-        (t) => t.tournamentId !== tournamentId
-      ),
-    });
-
-    handlePopupClosed();
-    navigate('/');
+    handleTournamentsChanged(
+      { tournamentId: currentTournamentId, bracketName: '', memberData: [] },
+      'Removed'
+    );
   };
 
   return (

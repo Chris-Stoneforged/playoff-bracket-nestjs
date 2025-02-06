@@ -1,18 +1,13 @@
-import { TournamentDetailedData } from '@playoff-bracket-app/database';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import styles from './Tournament.module.css';
 import { useLoaderData } from 'react-router-dom';
-import {
-  userContext,
-  UserDataContext,
-  tournamentContext,
-} from '../../utils/context';
+import { userContext } from '../../utils/context';
 import TournamentSettingsMenu from '../../components/tournamentSettingsMenu/TournamentSettingsMenu';
+import { TournamentData, UserData } from '@playoff-bracket-app/database';
 
 export default function Tournament() {
-  const { user, setUser }: UserDataContext = useContext(userContext);
-  const tournamentData: TournamentDetailedData =
-    useLoaderData() as TournamentDetailedData;
+  const user: UserData = useContext(userContext);
+  const tournamentData: TournamentData = useLoaderData() as TournamentData;
 
   const handleMemberClicked = (memberId: number) => {
     console.log('clicked member');
@@ -26,22 +21,20 @@ export default function Tournament() {
 
   return (
     <div className={styles.tournamentZone}>
-      <tournamentContext.Provider value={tournamentData.tournamentId}>
-        <div className={styles.bracketZone}></div>
-        <div className={styles.overlay}>
-          <div className={styles.memberList}>
-            {memberData.map((member) => (
-              <button
-                className={styles.memberButton}
-                onClick={() => handleMemberClicked(member.id)}
-              >
-                {member.id === user?.userId ? 'Me' : member.nickname}
-              </button>
-            ))}
-          </div>
-          <TournamentSettingsMenu />
+      <div className={styles.bracketZone}></div>
+      <div className={styles.overlay}>
+        <div className={styles.memberList}>
+          {memberData.map((member) => (
+            <button
+              className={styles.memberButton}
+              onClick={() => handleMemberClicked(member.id)}
+            >
+              {member.id === user?.userId ? 'Me' : member.nickname}
+            </button>
+          ))}
         </div>
-      </tournamentContext.Provider>
+        <TournamentSettingsMenu />
+      </div>
     </div>
   );
 }

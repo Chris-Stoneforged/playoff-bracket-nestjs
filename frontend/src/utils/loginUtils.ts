@@ -4,6 +4,10 @@ export function getCookie(cookieName: string): string {
   return match ? decodeURIComponent(match[1]) : '';
 }
 
+export function deleteCookie() {
+  document.cookie = 'playoff-preditor-token=; Max-Age=-99999999;';
+}
+
 export function isLoggedIn(): boolean {
   const loginCookie = getCookie('playoff-preditor-token');
   return loginCookie !== '';

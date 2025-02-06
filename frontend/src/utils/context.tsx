@@ -1,16 +1,27 @@
-import { UserData } from '@playoff-bracket-app/database';
+import { TournamentData, UserData } from '@playoff-bracket-app/database';
 import { createContext } from 'react';
+import { TournamentChangeType } from './types';
 
-export type UserDataContext = {
-  user: UserData | null;
-  setUser: React.Dispatch<React.SetStateAction<UserData | null>> | null;
+const defaultUser: UserData = {
+  userId: -1,
+  nickname: '',
+  tournaments: [],
 };
 
-const userContext = createContext<UserDataContext>({
-  user: null,
-  setUser: null,
+export type TournamentContext = {
+  currentTournamentId: number;
+  handleTournamentsChanged: (
+    tournament: TournamentData,
+    changeType: TournamentChangeType
+  ) => void;
+};
+
+const userContext = createContext<UserData>(defaultUser);
+const tournamentContext = createContext<TournamentContext>({
+  currentTournamentId: -1,
+  handleTournamentsChanged: (t, c) => {
+    return;
+  },
 });
 
-const tournamentContext = createContext<number>(0);
-
-export { userContext, tournamentContext };
+export { defaultUser, userContext, tournamentContext };

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './JoinTournamentPopup.module.css';
-import { TournamentData } from '@playoff-bracket-app/database';
 import PopupWithSubmit from '../popupTemplate/PopupWithSubmit';
 import { getRequest, postRequest } from '../../../utils/routes';
+import { tournamentContext } from '../../../utils/context';
 
 type JoinTournamentPopupProps = {
-  handlePopupClosed: (tournament: TournamentData | null) => void;
+  handlePopupClosed: () => void;
 };
 
 export default function JoinTournamentPopup({
@@ -16,6 +16,7 @@ export default function JoinTournamentPopup({
   const [inviteInfo, setInviteInfo] = useState({ sender: '', bracketName: '' });
   const [hasInvite, setHasInvite] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
+  const { handleTournamentsChanged } = useContext(tournamentContext);
 
   const handleCodeChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInviteCode(event.target.value);
@@ -43,8 +44,6 @@ export default function JoinTournamentPopup({
       sender: responseJson.data.sender,
       bracketName: responseJson.data.bracketName,
     });
-
-    console.log(inviteInfo);
   };
 
   const handleJoinClicked = async () => {
@@ -60,10 +59,16 @@ export default function JoinTournamentPopup({
     }
 
     const responseData = await response.json();
-    handlePopupClosed({
-      tournamentId: responseData.data.tournamentId,
-      bracketName: responseData.data.bracketName,
-    });
+    handleTournamentsChanged(
+      {
+        tournamentId: responseData.data.tournamentId,
+        bracketName: responseData.data.bracketName,
+        memberData: responseData.data.memberData,
+      },
+      'Added'
+    );
+
+    handlePopupClosed();
   };
 
   return (
@@ -73,7 +78,7 @@ export default function JoinTournamentPopup({
       loading={isLoading}
       disabled={isLoading}
       errorText={errorText}
-      handlePopupClosed={() => handlePopupClosed(null)}
+      handlePopupClosed={handlePopupClosed}
       handleSubmit={
         hasInvite ? () => handleJoinClicked() : () => handleSubmitClicked()
       }

@@ -258,14 +258,12 @@ export async function joinTournament(request: Request, response: Response) {
   });
 
   const memberData = tournament.users.map((member) => {
-    const userScore = calculateUserScore(member);
-    return { id: member.id, nickname: member.nickname, score: userScore };
+    return { id: member.id, nickname: member.nickname };
   });
 
   memberData.push({
     id: request.user.id,
     nickname: request.user.nickname,
-    score: 0,
   });
 
   response.status(200).json({

@@ -14,7 +14,7 @@ export default function GetInviteCodePopup({
   const [inviteCode, setInviteCode] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
   const [isValidCode, setIsValidCode] = useState(true);
-  const tournamentId = useContext(tournamentContext);
+  const { currentTournamentId } = useContext(tournamentContext);
 
   const handleCopyClicked = () => {
     navigator.clipboard.writeText(inviteCode);
@@ -24,7 +24,7 @@ export default function GetInviteCodePopup({
     const loadInviteCode = async () => {
       setIsDisabled(true);
       const response = await postRequest(
-        `/api/v1/tournament/${tournamentId}/generate-invite-code`
+        `/api/v1/tournament/${currentTournamentId}/generate-invite-code`
       );
       if (response.status !== 200) {
         setIsValidCode(false);
@@ -38,7 +38,7 @@ export default function GetInviteCodePopup({
     };
 
     loadInviteCode();
-  }, []);
+  }, [currentTournamentId]);
 
   return (
     <Popup
