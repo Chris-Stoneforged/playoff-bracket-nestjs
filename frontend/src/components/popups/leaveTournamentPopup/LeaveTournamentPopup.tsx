@@ -35,6 +35,7 @@ export default function LeaveTournamentPopup({
       { tournamentId: currentTournamentId, bracketName: '', memberData: [] },
       'Removed'
     );
+    handlePopupClosed();
   };
 
   return (
