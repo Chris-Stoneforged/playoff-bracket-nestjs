@@ -5,6 +5,7 @@ export type MatchupData = {
   team_b?: string;
   winner?: string;
   advances_to?: number;
+  best_of?: number;
 };
 
 export type BracketData = {
@@ -12,4 +13,7 @@ export type BracketData = {
   matchups: MatchupData[];
 };
 
-export type MatchupState = MatchupData & { predictedWinner?: string };
+export type MatchupState = MatchupData & {
+  predictedWinner?: string;
+  number_of_games?: number;
+};

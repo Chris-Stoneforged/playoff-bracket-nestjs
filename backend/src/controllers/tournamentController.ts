@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import prismaClient from '@playoff-bracket-app/database';
 import { BadRequestError } from '../errors/serverError';
-import { createInviteToken } from '../utils/utils';
+import { createInviteToken, isNumberOfGamesValid } from '../utils/utils';
 import { calculateUserScore } from '../utils/scoreCalculator';
 import { MatchupState } from '../utils/bracketData';
 
@@ -430,6 +430,7 @@ export async function getNextPredictionToMake(
         round: nextRemainingRoundOnePrediction.round,
         teamA: nextRemainingRoundOnePrediction.team_a,
         teamB: nextRemainingRoundOnePrediction.team_b,
+        bestOf: nextRemainingRoundOnePrediction.best_of,
       },
     });
     return;
@@ -480,6 +481,7 @@ export async function getNextPredictionToMake(
         round: existingPrediction.matchup.round + 1,
         teamA: existingPrediction.winner,
         teamB: otherPrediction.winner,
+        bestOf: nextPrediction.best_of,
       },
     });
     return;
@@ -496,6 +498,7 @@ export async function getNextPredictionToMake(
 export async function makePrediction(request: Request, response: Response) {
   const matchupId: number = request.body.matchup;
   const predictedWinner = request.body.predictedWinner;
+  const numberOfGames = request.body.numberOfGames;
 
   const tournamentId = Number.parseInt(request.params.id);
   if (Number.isNaN(tournamentId)) {
@@ -538,6 +541,10 @@ export async function makePrediction(request: Request, response: Response) {
     throw new BadRequestError('Matchup is already decided');
   }
 
+  if (!isNumberOfGamesValid(numberOfGames, predictedMatchup.best_of)) {
+    throw new BadRequestError('Invalid prediction - invalid number of games');
+  }
+
   if (
     predictedMatchup.round === 1 &&
     predictedWinner !== predictedMatchup.team_a &&
@@ -572,6 +579,7 @@ export async function makePrediction(request: Request, response: Response) {
       matchup_id: matchupId,
       tournament_id: tournament.id,
       winner: predictedWinner,
+      number_of_games: numberOfGames,
     },
   });
 
@@ -659,9 +667,11 @@ async function getBracketStateResponse(
       round: matchup.round,
       team_a: matchup.team_a ?? parentMatchups[0].predictions[0]?.winner,
       team_b: matchup.team_b ?? parentMatchups[1].predictions[0]?.winner,
+      best_of: matchup.best_of,
     };
     if (matchup.predictions.length > 0) {
       result.predictedWinner = matchup.predictions[0].winner;
+      result.number_of_games = matchup.predictions[0].number_of_games;
     }
     if (matchup.winner !== null) {
       result.winner = matchup.winner;
