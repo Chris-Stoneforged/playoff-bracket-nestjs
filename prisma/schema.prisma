@@ -50,6 +50,8 @@ model InviteToken {
 
 model Bracket {
   id              Int           @id @default(autoincrement())
+  left_side_name  String        @default("West")
+  right_side_name String        @default("East")
   bracket_name    String        @unique
   matchups        Matchup[]
   tournaments     Tournament[]
@@ -66,6 +68,7 @@ model Matchup {
   advances_to     Int?
   predictions     Prediction[]
   best_of         Int           @default(3)
+  left_side       Boolean?       @default(false)
   @@id([id, bracket_id])
 }
 

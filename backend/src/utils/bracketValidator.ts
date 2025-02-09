@@ -7,6 +7,8 @@ export default function validateBracketJson(
   const roundCounts = new Map<number, number>();
   const roundTeams = new Map<number, Set<string>>();
   const advancesTos = new Map<number, number>();
+  const roundLeftCounts = new Map<number, number>();
+  const roundRightCounts = new Map<number, number>();
   let highestRound = 0;
 
   for (const matchUp of bracketData.matchups) {
@@ -102,6 +104,27 @@ export default function validateBracketJson(
       }
     }
 
+    // Valid side assignment
+    if (matchUp.left_side) {
+      if (nextMatchup?.advances_to && !nextMatchup.left_side) {
+        return [false, 'Bracket side mismatch'];
+      }
+
+      roundLeftCounts.set(
+        matchUp.round,
+        (roundLeftCounts.get(matchUp.round) || 0) + 1
+      );
+    } else {
+      if (nextMatchup?.advances_to && nextMatchup.left_side) {
+        return [false, 'Bracket side mismatch'];
+      }
+
+      roundRightCounts.set(
+        matchUp.round,
+        (roundRightCounts.get(matchUp.round) || 0) + 1
+      );
+    }
+
     if (matchUp.round > highestRound) {
       highestRound = matchUp.round;
     }
@@ -126,6 +149,10 @@ export default function validateBracketJson(
   }
 
   for (let i = highestRound - 1; i > 0; i--) {
+    if (roundLeftCounts.get(i) != roundRightCounts.get(i)) {
+      return [false, 'Inbalanced bracket sides'];
+    }
+
     const matchupCount = roundCounts.get(i);
     if (matchupCount !== numberOfMatchups * 2) {
       return [false, 'Round numbers are incorrect'];

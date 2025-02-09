@@ -21,9 +21,14 @@ export async function udpateBracket(
 
   const bracket = await prismaClient.bracket.upsert({
     where: { bracket_name: bracketData.bracketName },
-    update: {},
+    update: {
+      left_side_name: bracketData.leftSideName,
+      right_side_name: bracketData.rightSideName,
+    },
     create: {
       bracket_name: bracketData.bracketName,
+      left_side_name: bracketData.leftSideName,
+      right_side_name: bracketData.rightSideName,
     },
   });
 

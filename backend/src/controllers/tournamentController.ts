@@ -637,6 +637,8 @@ export async function getBracketStateForUser(
     success: true,
     data: {
       matchups: matchupData,
+      leftSideName: tournament.bracket.left_side_name,
+      rightSideName: tournament.bracket.right_side_name,
       root_matchup_id: finalsMatchupId,
     },
   });
@@ -665,6 +667,7 @@ async function getBracketStateResponse(
     const result: MatchupState = {
       id: matchup.id,
       round: matchup.round,
+      left_side: matchup.left_side,
       team_a: matchup.team_a ?? parentMatchups[0].predictions[0]?.winner,
       team_b: matchup.team_b ?? parentMatchups[1].predictions[0]?.winner,
       best_of: matchup.best_of,
