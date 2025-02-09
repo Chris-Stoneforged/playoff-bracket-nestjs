@@ -95,6 +95,13 @@ export default function validateBracketJson(
       }
     }
 
+    // Valid best of
+    if (matchUp.best_of) {
+      if (matchUp.best_of % 2 == 0 || matchUp.best_of <= 0) {
+        return [false, 'Invalid best of'];
+      }
+    }
+
     if (matchUp.round > highestRound) {
       highestRound = matchUp.round;
     }
