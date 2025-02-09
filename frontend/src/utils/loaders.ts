@@ -23,3 +23,7 @@ export async function tournamentDetailLoader({
   const data = await response.json();
   return data.data;
 }
+
+export async function bracketLoader({ params }: { params: Params<'userId'> }) {
+  return null;
+}
