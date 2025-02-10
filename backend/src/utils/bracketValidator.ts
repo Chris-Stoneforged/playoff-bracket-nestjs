@@ -1,7 +1,7 @@
-import { BracketData } from './bracketData';
+import { BracketMatchupsData } from '@playoff-bracket-app/database';
 
 export default function validateBracketJson(
-  bracketData: BracketData
+  bracketData: BracketMatchupsData
 ): [boolean, string] {
   const idSet = new Set();
   const roundCounts = new Map<number, number>();

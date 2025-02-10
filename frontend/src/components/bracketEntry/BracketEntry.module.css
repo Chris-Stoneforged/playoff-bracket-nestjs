@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  border: 2px solid #22529f;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 8px;
+}
+
+.logos {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  max-width: 60px;
+  margin: 8px;
+}
+
+.wins {
+  text-align: center;
+}

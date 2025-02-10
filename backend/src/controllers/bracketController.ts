@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import prismaClient from '@playoff-bracket-app/database';
+import prismaClient, {
+  BracketMatchupsData,
+} from '@playoff-bracket-app/database';
 import { BadRequestError } from '../errors/serverError';
-import { BracketData } from '../utils/bracketData';
 import validateBracketJson from '../utils/bracketValidator';
 
 // Admin route
@@ -9,7 +10,7 @@ export async function udpateBracket(
   request: Request,
   response: Response
 ): Promise<void> {
-  const bracketData = request.body.bracketJson as BracketData;
+  const bracketData = request.body.bracketJson as BracketMatchupsData;
   if (!bracketData) {
     throw new BadRequestError('Error parsing bracket JSON.');
   }
@@ -20,15 +21,15 @@ export async function udpateBracket(
   }
 
   const bracket = await prismaClient.bracket.upsert({
-    where: { bracket_name: bracketData.bracketName },
+    where: { bracket_name: bracketData.bracket_name },
     update: {
-      left_side_name: bracketData.leftSideName,
-      right_side_name: bracketData.rightSideName,
+      left_side_name: bracketData.left_side_name,
+      right_side_name: bracketData.right_side_name,
     },
     create: {
-      bracket_name: bracketData.bracketName,
-      left_side_name: bracketData.leftSideName,
-      right_side_name: bracketData.rightSideName,
+      bracket_name: bracketData.bracket_name,
+      left_side_name: bracketData.left_side_name,
+      right_side_name: bracketData.right_side_name,
     },
   });
 

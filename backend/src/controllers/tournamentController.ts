@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import prismaClient from '@playoff-bracket-app/database';
+import prismaClient, {
+  BracketStateData,
+  MatchupStateData,
+} from '@playoff-bracket-app/database';
 import { BadRequestError } from '../errors/serverError';
 import { createInviteToken, isNumberOfGamesValid } from '../utils/utils';
 import { calculateUserScore } from '../utils/scoreCalculator';
-import { MatchupState } from '../utils/bracketData';
 
 export async function createTournament(request: Request, response: Response) {
   const bracket = await prismaClient.bracket.findFirst({
@@ -621,7 +623,7 @@ export async function getBracketStateForUser(
     );
   }
 
-  const userId = request.body.userId ?? request.user.id;
+  const userId = Number.parseInt(request.params.user);
   if (!tournament.users.some((user) => user.id === userId)) {
     throw new BadRequestError(
       `User with id ${userId} is not in your tournament`
@@ -633,21 +635,25 @@ export async function getBracketStateForUser(
     tournament.bracket_id
   );
 
+  const bracketState: BracketStateData = {
+    id: tournament.bracket_id,
+    bracket_name: tournament.bracket.bracket_name,
+    left_side_name: tournament.bracket.left_side_name,
+    right_side_name: tournament.bracket.right_side_name,
+    matchups: matchupData,
+    root_matchup_id: finalsMatchupId,
+  };
+
   response.status(200).json({
     success: true,
-    data: {
-      matchups: matchupData,
-      leftSideName: tournament.bracket.left_side_name,
-      rightSideName: tournament.bracket.right_side_name,
-      root_matchup_id: finalsMatchupId,
-    },
+    data: bracketState,
   });
 }
 
 async function getBracketStateResponse(
   userId: number,
   bracketId: number
-): Promise<[MatchupState[], number]> {
+): Promise<[MatchupStateData[], number]> {
   const matchups = await prismaClient.matchup.findMany({
     where: { bracket_id: bracketId },
     include: {
@@ -664,7 +670,7 @@ async function getBracketStateResponse(
       (match) => match.advances_to === matchup.id
     );
 
-    const result: MatchupState = {
+    const result: MatchupStateData = {
       id: matchup.id,
       round: matchup.round,
       left_side: matchup.left_side,

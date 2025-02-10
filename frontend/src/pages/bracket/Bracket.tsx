@@ -1,6 +1,18 @@
 import React from 'react';
 import styles from './Bracket.module.css';
+import { useLoaderData } from 'react-router-dom';
+import { BracketStateData } from '@playoff-bracket-app/database';
+import BracketEntry from '../../components/bracketEntry/BracketEntry';
 
 export default function Bracket() {
-  return <div>Bracket</div>;
+  const bracketData: BracketStateData = useLoaderData() as BracketStateData;
+  console.log(bracketData);
+
+  return (
+    <div>
+      {bracketData.matchups.map((m) => (
+        <BracketEntry state={m} />
+      ))}
+    </div>
+  );
 }

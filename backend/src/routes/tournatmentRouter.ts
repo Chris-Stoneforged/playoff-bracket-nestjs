@@ -39,6 +39,6 @@ router
   .route('/v1/tournament/:id/prediction/make')
   .post(errorSafe(isUserAuthenticated, makePrediction));
 router
-  .route('/v1/tournament/:id/bracket')
+  .route('/v1/tournament/:id/bracket/:user')
   .get(errorSafe(isUserAuthenticated, getBracketStateForUser));
 export default router;

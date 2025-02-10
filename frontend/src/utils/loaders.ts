@@ -24,6 +24,22 @@ export async function tournamentDetailLoader({
   return data.data;
 }
 
-export async function bracketLoader({ params }: { params: Params<'userId'> }) {
-  return null;
+export async function bracketLoader({
+  params,
+}: {
+  params: Params<'tournamentId' | 'userId'>;
+}) {
+  const response = await getRequest(
+    `/api/v1/tournament/${params.tournamentId}/bracket/${params.userId}`
+  );
+
+  if (response.status !== 200) {
+    throw new Response('', {
+      status: 404,
+      statusText: 'Not Found',
+    });
+  }
+
+  const data = await response.json();
+  return data.data;
 }
