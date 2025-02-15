@@ -1,16 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './Tournament.module.css';
 import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
-import { userContext } from '../../utils/context';
+import { userContext, interactableBracketContext } from '../../utils/context';
 import TournamentSettingsMenu from '../../components/tournamentSettingsMenu/TournamentSettingsMenu';
 import { TournamentData, UserData } from '@playoff-bracket-app/database';
 
 export default function Tournament() {
   const navigate = useNavigate();
   const user: UserData = useContext(userContext);
+  const [selectedMemberId, setSelectedMemberId] = useState<number>(-1);
   const tournamentData: TournamentData = useLoaderData() as TournamentData;
 
   const handleMemberClicked = (memberId: number) => {
+    setSelectedMemberId(memberId);
     navigate(`/tournament/${tournamentData.tournamentId}/${memberId}`);
   };
 
@@ -22,22 +24,25 @@ export default function Tournament() {
 
   return (
     <div className={styles.tournamentZone}>
-      <div className={styles.bracketZone}>
+      <interactableBracketContext.Provider
+        value={selectedMemberId === user.userId}
+      >
         <Outlet />
+      </interactableBracketContext.Provider>
+
+      <div className={styles.memberList}>
+        {memberData.map((member) => (
+          <button
+            className={`${styles.memberButton} ${
+              member.id === selectedMemberId ? `${styles.selected}` : ''
+            }`}
+            onClick={() => handleMemberClicked(member.id)}
+          >
+            {member.id === user?.userId ? 'Me' : member.nickname}
+          </button>
+        ))}
       </div>
-      <div className={styles.overlay}>
-        <div className={styles.memberList}>
-          {memberData.map((member) => (
-            <button
-              className={styles.memberButton}
-              onClick={() => handleMemberClicked(member.id)}
-            >
-              {member.id === user?.userId ? 'Me' : member.nickname}
-            </button>
-          ))}
-        </div>
-        <TournamentSettingsMenu />
-      </div>
+      <TournamentSettingsMenu />
     </div>
   );
 }

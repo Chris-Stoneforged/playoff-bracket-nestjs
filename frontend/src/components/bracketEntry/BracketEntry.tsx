@@ -11,8 +11,6 @@ export default function BracketEntry({ state }: BracketEntryProps) {
   const hasMadePrediction = state.predictedWinner !== undefined;
   const lockedOutOfPrediction =
     !hasMadePrediction && state.winner !== undefined;
-  const canMakePrediction =
-    !lockedOutOfPrediction && state.predictedWinner === undefined;
 
   return (
     <div className={styles.container}>
@@ -36,7 +34,6 @@ export default function BracketEntry({ state }: BracketEntryProps) {
         {lockedOutOfPrediction && 'Did not pick'}
         {hasMadePrediction &&
           `Picked ${state.predictedWinner} in ${state.number_of_games}`}
-        {canMakePrediction && <button>Pick Winner</button>}
       </div>
     </div>
   );

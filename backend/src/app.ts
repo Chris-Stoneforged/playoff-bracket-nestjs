@@ -13,7 +13,7 @@ import * as Sentry from '@sentry/node';
 
 const app: Express = express();
 
-app.use(rateLimiter({ hitLimit: 20, timeOutMillis: 30000 }));
+app.use(rateLimiter({ hitLimit: 30, timeOutMillis: 10000 }));
 app.use(securityHeaders);
 app.use(express.json());
 

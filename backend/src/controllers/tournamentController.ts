@@ -7,6 +7,7 @@ import prismaClient, {
 import { BadRequestError } from '../errors/serverError';
 import { createInviteToken, isNumberOfGamesValid } from '../utils/utils';
 import { calculateUserScore } from '../utils/scoreCalculator';
+import { Tournament } from '@prisma/client';
 
 export async function createTournament(request: Request, response: Response) {
   const bracket = await prismaClient.bracket.findFirst({
@@ -540,8 +541,8 @@ export async function makePrediction(request: Request, response: Response) {
     throw new BadRequestError('Invalid prediction Id');
   }
 
-  if (predictedMatchup.winner) {
-    throw new BadRequestError('Matchup is already decided');
+  if (predictedMatchup.team_a_wins > 0 || predictedMatchup.team_b_wins > 0) {
+    throw new BadRequestError('Matchup is already underway');
   }
 
   if (!isNumberOfGamesValid(numberOfGames, predictedMatchup.best_of)) {
@@ -588,7 +589,7 @@ export async function makePrediction(request: Request, response: Response) {
 
   const [matchupData, finalsMatchupId] = await getBracketStateResponse(
     request.body.userId ?? request.user.id,
-    tournament.bracket_id
+    tournament
   );
 
   response.status(200).json({
@@ -632,15 +633,12 @@ export async function getBracketStateForUser(
   }
 
   const [matchupData, finalsMatchupId] = await getBracketStateResponse(
-    request.body.userId ?? request.user.id,
-    tournament.bracket_id
+    userId,
+    tournament
   );
 
   const bracketState: BracketStateData = {
-    id: tournament.bracket_id,
-    bracket_name: tournament.bracket.bracket_name,
-    left_side_name: tournament.bracket.left_side_name,
-    right_side_name: tournament.bracket.right_side_name,
+    ...tournament.bracket,
     matchups: matchupData,
     root_matchup_id: finalsMatchupId,
   };
@@ -653,26 +651,35 @@ export async function getBracketStateForUser(
 
 async function getBracketStateResponse(
   userId: number,
-  bracketId: number
+  tournament: Tournament
 ): Promise<[MatchupStateData[], number]> {
   const matchups = await prismaClient.matchup.findMany({
-    where: { bracket_id: bracketId },
+    where: { bracket_id: tournament.bracket_id },
     include: {
       predictions: {
         where: {
           user_id: userId,
+          tournament_id: tournament.id,
         },
       },
     },
   });
 
   const matchupData = matchups.map((matchup) => {
+    const parentMatchups = matchups.filter(
+      (match) => match.advances_to === matchup.id
+    );
+
     const result: MatchupStateData = {
       id: matchup.id,
       round: matchup.round,
       left_side: matchup.left_side,
-      team_a: matchup.team_a as NBATeam | undefined,
-      team_b: matchup.team_b as NBATeam | undefined,
+      team_a: (matchup.team_a ?? parentMatchups[0].predictions[0]?.winner) as
+        | NBATeam
+        | undefined,
+      team_b: (matchup.team_b ?? parentMatchups[1].predictions[0]?.winner) as
+        | NBATeam
+        | undefined,
       best_of: matchup.best_of,
       team_a_wins: matchup.team_a_wins,
       team_b_wins: matchup.team_b_wins,

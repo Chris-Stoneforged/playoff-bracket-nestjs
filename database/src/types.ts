@@ -35,6 +35,7 @@ export type MatchupStateData = MatchupData & {
 
 export type BracketData = {
   id: number;
+  predictions_locked: boolean;
   bracket_name: string;
   left_side_name: string;
   right_side_name: string;

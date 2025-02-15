@@ -54,7 +54,7 @@ export default function TournamentSettingsMenu() {
   }, [isSettingsMenuOpen]);
 
   return (
-    <div>
+    <div className={styles.buttonContainer}>
       <button
         ref={settingsButton}
         className={styles.settingsButton}

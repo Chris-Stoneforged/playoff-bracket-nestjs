@@ -34,6 +34,7 @@ export async function bracketLoader({
   );
 
   if (response.status !== 200) {
+    console.log(response);
     throw new Response('', {
       status: 404,
       statusText: 'Not Found',

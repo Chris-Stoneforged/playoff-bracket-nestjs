@@ -19,70 +19,71 @@ enum Role {
 }
 
 model User {
-  id              Int           @id @default(autoincrement())
-  email           String        @unique
-  nickname        String
-  password        String        
-  role            Role
-  tournaments     Tournament[]
-  sent_tokens     InviteToken[]
-  predictions     Prediction[]
+  id                Int           @id @default(autoincrement())
+  email             String        @unique
+  nickname          String
+  password          String        
+  role              Role
+  tournaments       Tournament[]
+  sent_tokens       InviteToken[]
+  predictions       Prediction[]
 }
 
 model Tournament {
-  id              Int           @id @default(autoincrement())
-  bracket_id      Int
-  bracket         Bracket       @relation(fields: [bracket_id], references: [id], onDelete: Cascade)
-  users           User[]
-  invite_tokens   InviteToken[]
-  predictions     Prediction[]
+  id                Int           @id @default(autoincrement())
+  bracket_id        Int
+  bracket           Bracket       @relation(fields: [bracket_id], references: [id], onDelete: Cascade)
+  users             User[]
+  invite_tokens     InviteToken[]
+  predictions       Prediction[]
 }
 
 model InviteToken {
-  tournament_id   Int
-  tournament      Tournament    @relation(fields: [tournament_id], references: [id], onDelete: Cascade)
-  code            String        @unique
-  expiry          DateTime
-  sender_id       Int           
-  sender          User          @relation(fields: [sender_id], references: [id], onDelete: Cascade)
+  tournament_id     Int
+  tournament        Tournament    @relation(fields: [tournament_id], references: [id], onDelete: Cascade)
+  code              String        @unique
+  expiry            DateTime
+  sender_id         Int           
+  sender            User          @relation(fields: [sender_id], references: [id], onDelete: Cascade)
   @@id(name: "id", [sender_id, tournament_id])
 }
 
 model Bracket {
-  id              Int           @id @default(autoincrement())
-  left_side_name  String        @default("West")
-  right_side_name String        @default("East")
-  bracket_name    String        @unique
-  matchups        Matchup[]
-  tournaments     Tournament[]
+  id                Int           @id @default(autoincrement())
+  predictions_locked  Boolean   @default(false)
+  left_side_name    String        @default("West")
+  right_side_name   String        @default("East")
+  bracket_name      String        @unique
+  matchups          Matchup[]
+  tournaments       Tournament[]
 }
 
 model Matchup {
-  id              Int
-  bracket_id      Int
-  bracket         Bracket       @relation(fields: [bracket_id], references: [id], onDelete: Cascade)
-  round           Int
-  team_a          String?
-  team_b          String?
-  team_a_wins     Int           @default(0)
-  team_b_wins     Int           @default(0)
-  winner          String?
-  advances_to     Int?
-  predictions     Prediction[]
-  best_of         Int           @default(3)
-  left_side       Boolean?       @default(false)
+  id                Int
+  bracket_id        Int
+  bracket           Bracket       @relation(fields: [bracket_id], references: [id], onDelete: Cascade)
+  round             Int
+  team_a            String?
+  team_b            String?
+  team_a_wins       Int           @default(0)
+  team_b_wins       Int           @default(0)
+  winner            String?
+  advances_to       Int?
+  predictions       Prediction[]
+  best_of           Int           @default(3)
+  left_side         Boolean?       @default(false)
   @@id([id, bracket_id])
 }
 
 model Prediction {
-  id              Int           @id @default(autoincrement())
-  user_id         Int
-  user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  matchup_id      Int           
-  tournament_id   Int
-  tournament      Tournament    @relation(fields: [tournament_id], references: [id], onDelete: Cascade)
-  bracket_id      Int           
-  matchup         Matchup       @relation(fields: [matchup_id, bracket_id], references: [id, bracket_id])
-  winner          String
-  number_of_games Int           @default(3)
+  id                Int           @id @default(autoincrement())
+  user_id           Int
+  user              User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  matchup_id        Int           
+  tournament_id     Int
+  tournament        Tournament    @relation(fields: [tournament_id], references: [id], onDelete: Cascade)
+  bracket_id        Int           
+  matchup           Matchup       @relation(fields: [matchup_id, bracket_id], references: [id, bracket_id])
+  winner            String
+  number_of_games   Int           @default(3)
 }

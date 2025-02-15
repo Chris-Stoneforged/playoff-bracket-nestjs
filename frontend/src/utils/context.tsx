@@ -24,4 +24,11 @@ const tournamentContext = createContext<TournamentContext>({
   },
 });
 
-export { defaultUser, userContext, tournamentContext };
+const interactableBracketContext = createContext<boolean>(false);
+
+export {
+  defaultUser,
+  userContext,
+  tournamentContext,
+  interactableBracketContext,
+};
