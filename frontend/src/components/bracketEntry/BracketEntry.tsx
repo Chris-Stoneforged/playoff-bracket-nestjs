@@ -29,10 +29,13 @@ export default function BracketEntry({ state }: BracketEntryProps) {
           victoriousTeam={state.winner}
         />
       </div>
-      <div className={styles.wins}>{`${0} - ${0}`}</div>
+      <div
+        className={styles.wins}
+      >{`${state.team_a_wins} - ${state.team_b_wins}`}</div>
       <div className={styles.predictionArea}>
         {lockedOutOfPrediction && 'Did not pick'}
-        {hasMadePrediction && `Picked ${state.predictedWinner} in ${7}`}
+        {hasMadePrediction &&
+          `Picked ${state.predictedWinner} in ${state.number_of_games}`}
         {canMakePrediction && <button>Pick Winner</button>}
       </div>
     </div>

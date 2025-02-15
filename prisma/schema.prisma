@@ -64,6 +64,8 @@ model Matchup {
   round           Int
   team_a          String?
   team_b          String?
+  team_a_wins     Int           @default(0)
+  team_b_wins     Int           @default(0)
   winner          String?
   advances_to     Int?
   predictions     Prediction[]

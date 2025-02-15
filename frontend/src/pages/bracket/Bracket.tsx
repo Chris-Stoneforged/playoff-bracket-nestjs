@@ -6,7 +6,6 @@ import BracketEntry from '../../components/bracketEntry/BracketEntry';
 
 export default function Bracket() {
   const bracketData: BracketStateData = useLoaderData() as BracketStateData;
-  console.log(bracketData);
 
   return (
     <div className={styles.bracketContainer}>

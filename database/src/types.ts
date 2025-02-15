@@ -21,6 +21,8 @@ export type MatchupData = {
   left_side: boolean;
   team_a?: NBATeam;
   team_b?: NBATeam;
+  team_a_wins: number;
+  team_b_wins: number;
   winner?: NBATeam;
   advances_to?: number;
   best_of?: number;

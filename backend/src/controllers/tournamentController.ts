@@ -674,6 +674,8 @@ async function getBracketStateResponse(
       team_a: matchup.team_a as NBATeam | undefined,
       team_b: matchup.team_b as NBATeam | undefined,
       best_of: matchup.best_of,
+      team_a_wins: matchup.team_a_wins,
+      team_b_wins: matchup.team_b_wins,
     };
     if (matchup.predictions.length > 0) {
       result.predictedWinner = matchup.predictions[0].winner as NBATeam;

@@ -125,6 +125,35 @@ export default function validateBracketJson(
       );
     }
 
+    if (
+      matchUp.team_a_wins === undefined ||
+      matchUp.team_b_wins === undefined
+    ) {
+      return [false, 'Wins are missing'];
+    }
+
+    // Valid number of wins
+    const maxWins = Math.ceil(matchUp.best_of / 2);
+    if (
+      matchUp.team_a_wins < 0 ||
+      matchUp.team_a_wins > maxWins ||
+      matchUp.team_b_wins < 0 ||
+      matchUp.team_b_wins > maxWins ||
+      matchUp.team_a_wins + matchUp.team_b_wins > matchUp.best_of
+    ) {
+      return [false, 'Invalid amount of wins'];
+    }
+
+    if (
+      matchUp.winner &&
+      (matchUp.team_a_wins < maxWins || matchUp.team_b_wins < maxWins)
+    ) {
+      return [
+        false,
+        'Winner specified, but neither team has reached max win threshold',
+      ];
+    }
+
     if (matchUp.round > highestRound) {
       highestRound = matchUp.round;
     }
