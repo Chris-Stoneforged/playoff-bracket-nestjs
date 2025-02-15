@@ -16,3 +16,9 @@
 .wins {
   text-align: center;
 }
+
+.predictionArea {
+  text-align: center;
+  font-size: x-small;
+  flex-grow: 0;
+}

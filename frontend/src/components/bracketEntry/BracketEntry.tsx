@@ -8,6 +8,12 @@ export type BracketEntryProps = {
 };
 
 export default function BracketEntry({ state }: BracketEntryProps) {
+  const hasMadePrediction = state.predictedWinner !== undefined;
+  const lockedOutOfPrediction =
+    !hasMadePrediction && state.winner !== undefined;
+  const canMakePrediction =
+    !lockedOutOfPrediction && state.predictedWinner === undefined;
+
   return (
     <div className={styles.container}>
       <div className={styles.logos}>
@@ -25,7 +31,9 @@ export default function BracketEntry({ state }: BracketEntryProps) {
       </div>
       <div className={styles.wins}>{`${0} - ${0}`}</div>
       <div className={styles.predictionArea}>
-        {state.predictedWinner === undefined && <button></button>}
+        {lockedOutOfPrediction && 'Did not pick'}
+        {hasMadePrediction && `Picked ${state.predictedWinner} in ${7}`}
+        {canMakePrediction && <button>Pick Winner</button>}
       </div>
     </div>
   );

@@ -22,14 +22,6 @@ export default function BracketTeam({
   const isPredicted = predictedTeam === team;
   const isVictorious = victoriousTeam === team;
 
-  console.log(
-    bracketTeam,
-    predictionMade,
-    outcomeDecided,
-    isPredicted,
-    isVictorious
-  );
-
   return (
     <div className={styles.logo}>
       <img
@@ -43,10 +35,10 @@ export default function BracketTeam({
             : ''
         }`}
       ></img>
-      {outcomeDecided && predictionMade && isVictorious && (
+      {outcomeDecided && predictionMade && isPredicted && isVictorious && (
         <img src={tick} alt="tick" className={styles.overlayImage}></img>
       )}
-      {outcomeDecided && predictionMade && !isVictorious && (
+      {outcomeDecided && predictionMade && isPredicted && !isVictorious && (
         <img src={cross} alt="cross" className={styles.overlayImage}></img>
       )}
     </div>
