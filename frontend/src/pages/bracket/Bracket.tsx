@@ -9,7 +9,7 @@ export default function Bracket() {
   console.log(bracketData);
 
   return (
-    <div>
+    <div className={styles.bracketContainer}>
       {bracketData.matchups.map((m) => (
         <BracketEntry state={m} />
       ))}

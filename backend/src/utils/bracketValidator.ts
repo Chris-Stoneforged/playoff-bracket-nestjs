@@ -1,11 +1,11 @@
-import { BracketMatchupsData } from '@playoff-bracket-app/database';
+import { BracketMatchupsData, NBATeam } from '@playoff-bracket-app/database';
 
 export default function validateBracketJson(
   bracketData: BracketMatchupsData
 ): [boolean, string] {
   const idSet = new Set();
   const roundCounts = new Map<number, number>();
-  const roundTeams = new Map<number, Set<string>>();
+  const roundTeams = new Map<number, Set<NBATeam>>();
   const advancesTos = new Map<number, number>();
   const roundLeftCounts = new Map<number, number>();
   const roundRightCounts = new Map<number, number>();
@@ -15,7 +15,7 @@ export default function validateBracketJson(
     idSet.add(matchUp.id);
 
     // Check no duplicate teams
-    const teamSet = roundTeams.get(matchUp.round) || new Set<string>();
+    const teamSet = roundTeams.get(matchUp.round) || new Set<NBATeam>();
     if (matchUp.team_a) {
       if (teamSet.has(matchUp.team_a)) {
         return [

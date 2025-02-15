@@ -19,15 +19,15 @@ export type MatchupData = {
   id: number;
   round: number;
   left_side: boolean;
-  team_a?: string;
-  team_b?: string;
-  winner?: string;
+  team_a?: NBATeam;
+  team_b?: NBATeam;
+  winner?: NBATeam;
   advances_to?: number;
   best_of?: number;
 };
 
 export type MatchupStateData = MatchupData & {
-  predictedWinner?: string;
+  predictedWinner?: NBATeam;
   number_of_games?: number;
 };
 
@@ -46,3 +46,35 @@ export type BracketStateData = BracketData & {
   root_matchup_id: number;
   matchups: MatchupStateData[];
 };
+
+export type NBATeam =
+  | 'Hawks'
+  | 'Celtics'
+  | 'Nets'
+  | 'Hornets'
+  | 'Bulls'
+  | 'Cavaliers'
+  | 'Mavericks'
+  | 'Nuggets'
+  | 'Pistons'
+  | 'Warriors'
+  | 'Rockets'
+  | 'Pacers'
+  | 'Clippers'
+  | 'Lakers'
+  | 'Grizzlies'
+  | 'Heat'
+  | 'Bucks'
+  | 'Timberwolves'
+  | 'Pelicans'
+  | 'Knicks'
+  | 'Thunder'
+  | 'Magic'
+  | 'Sixers'
+  | 'Suns'
+  | 'Blazers'
+  | 'Kings'
+  | 'Spurs'
+  | 'Raptors'
+  | 'Jazz'
+  | 'Wizards';

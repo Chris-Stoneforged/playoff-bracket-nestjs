@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import prismaClient, {
   BracketStateData,
   MatchupStateData,
+  NBATeam,
 } from '@playoff-bracket-app/database';
 import { BadRequestError } from '../errors/serverError';
 import { createInviteToken, isNumberOfGamesValid } from '../utils/utils';
@@ -666,24 +667,20 @@ async function getBracketStateResponse(
   });
 
   const matchupData = matchups.map((matchup) => {
-    const parentMatchups = matchups.filter(
-      (match) => match.advances_to === matchup.id
-    );
-
     const result: MatchupStateData = {
       id: matchup.id,
       round: matchup.round,
       left_side: matchup.left_side,
-      team_a: matchup.team_a ?? parentMatchups[0].predictions[0]?.winner,
-      team_b: matchup.team_b ?? parentMatchups[1].predictions[0]?.winner,
+      team_a: matchup.team_a as NBATeam | undefined,
+      team_b: matchup.team_b as NBATeam | undefined,
       best_of: matchup.best_of,
     };
     if (matchup.predictions.length > 0) {
-      result.predictedWinner = matchup.predictions[0].winner;
+      result.predictedWinner = matchup.predictions[0].winner as NBATeam;
       result.number_of_games = matchup.predictions[0].number_of_games;
     }
     if (matchup.winner !== null) {
-      result.winner = matchup.winner;
+      result.winner = matchup.winner as NBATeam;
     }
 
     return result;

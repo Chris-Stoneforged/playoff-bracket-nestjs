@@ -29,8 +29,9 @@ import raptors from '../assets/teamLogos/raptors.png';
 import jazz from '../assets/teamLogos/jazz.png';
 import wizards from '../assets/teamLogos/wizards.png';
 import unknown from '../assets/teamLogos/unknown.png';
+import { NBATeam } from '@playoff-bracket-app/database';
 
-const logos: Record<string, string> = {
+const logos: Record<NBATeam | 'Unknown', string> = {
   Hawks: hawks,
   Celtics: celtics,
   Nets: nets,
