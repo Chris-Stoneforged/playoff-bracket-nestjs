@@ -25,11 +25,13 @@ export async function udpateBracket(
     update: {
       left_side_name: bracketData.left_side_name,
       right_side_name: bracketData.right_side_name,
+      predictions_locked: bracketData.predictions_locked,
     },
     create: {
       bracket_name: bracketData.bracket_name,
       left_side_name: bracketData.left_side_name,
       right_side_name: bracketData.right_side_name,
+      predictions_locked: bracketData.predictions_locked,
     },
   });
 

@@ -34,7 +34,7 @@ export default function Tournament() {
         {memberData.map((member) => (
           <button
             className={`${styles.memberButton} ${
-              member.id === selectedMemberId ? `${styles.selected}` : ''
+              member.id === selectedMemberId ? styles.selected : ''
             }`}
             onClick={() => handleMemberClicked(member.id)}
           >

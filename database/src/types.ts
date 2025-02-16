@@ -29,6 +29,7 @@ export type MatchupData = {
 };
 
 export type MatchupStateData = MatchupData & {
+  requires_prediction: boolean;
   predictedWinner?: NBATeam;
   number_of_games?: number;
 };

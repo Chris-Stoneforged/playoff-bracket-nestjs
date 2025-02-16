@@ -3,7 +3,6 @@ import {
   createTournament,
   getBracketStateForUser,
   getInviteCodeInfo,
-  getNextPredictionToMake,
   getTournamentDetails,
   getTournamentInviteCode,
   joinTournament,
@@ -32,9 +31,6 @@ router
 router
   .route('/v1/tournament/:id/generate-invite-code')
   .post(errorSafe(isUserAuthenticated, getTournamentInviteCode));
-router
-  .route('/v1/tournament/:id/prediction/next')
-  .get(errorSafe(isUserAuthenticated, getNextPredictionToMake));
 router
   .route('/v1/tournament/:id/prediction/make')
   .post(errorSafe(isUserAuthenticated, makePrediction));

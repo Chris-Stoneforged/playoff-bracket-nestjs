@@ -7,7 +7,7 @@ import prismaClient, {
 import { BadRequestError } from '../errors/serverError';
 import { createInviteToken, isNumberOfGamesValid } from '../utils/utils';
 import { calculateUserScore } from '../utils/scoreCalculator';
-import { Tournament } from '@prisma/client';
+import { Matchup, Prisma, Tournament } from '@prisma/client';
 
 export async function createTournament(request: Request, response: Response) {
   const bracket = await prismaClient.bracket.findFirst({
@@ -389,114 +389,67 @@ export async function getTournamentInviteCode(
   });
 }
 
-export async function getNextPredictionToMake(
-  request: Request,
-  response: Response
-) {
-  const tournamentId = Number.parseInt(request.params.id);
-  if (Number.isNaN(tournamentId)) {
-    throw new BadRequestError('Invalid tournament Id');
-  }
+type MatchupWithPrediction = Prisma.MatchupGetPayload<{
+  include: { predictions: true };
+}>;
 
-  const tournament = await prismaClient.tournament.findFirst({
-    where: { id: tournamentId },
-    include: { bracket: true },
-  });
-
-  if (!tournament) {
-    throw new BadRequestError(
-      `User is not in tournament with id ${tournamentId}`
-    );
-  }
-
-  const nextRemainingRoundOnePrediction = await prismaClient.matchup.findFirst({
-    where: {
-      AND: [
-        { bracket_id: tournament.bracket_id },
-        { round: 1 },
-        { winner: null },
-        {
-          predictions: {
-            none: {
-              user_id: request.user.id,
-            },
-          },
+async function getValidPredictions(
+  userId: number,
+  tournament: Tournament
+): Promise<MatchupWithPrediction[]> {
+  const matchups: MatchupWithPrediction[] = await prismaClient.matchup.findMany(
+    {
+      where: {
+        bracket_id: tournament.bracket_id,
+      },
+      include: {
+        predictions: {
+          where: { user_id: userId, tournament_id: tournament.id },
         },
-      ],
-    },
-  });
-
-  if (nextRemainingRoundOnePrediction) {
-    response.status(200).json({
-      success: true,
-      data: {
-        matchupId: nextRemainingRoundOnePrediction.id,
-        round: nextRemainingRoundOnePrediction.round,
-        teamA: nextRemainingRoundOnePrediction.team_a,
-        teamB: nextRemainingRoundOnePrediction.team_b,
-        bestOf: nextRemainingRoundOnePrediction.best_of,
       },
-    });
-    return;
-  }
+    }
+  );
 
-  const existingPredictions = await prismaClient.prediction.findMany({
-    where: {
-      user_id: request.user.id,
-      tournament_id: tournament.id,
-    },
-    include: {
-      matchup: true,
-    },
-  });
+  const finalMatchup = matchups.find((m) => m.advances_to === null);
 
-  for (const existingPrediction of existingPredictions) {
-    // If there's already been a prediction for the existingPrediction's next match (advances_to)
-    if (
-      existingPredictions.some(
-        (prediction) =>
-          prediction.matchup_id === existingPrediction.matchup.advances_to
-      )
-    ) {
-      continue;
+  const hasPrediction = (matchup: MatchupWithPrediction) => {
+    return matchup.predictions.length === 1;
+  };
+
+  const findValidPredictionRecursive = (
+    validMatchups: Matchup[],
+    matchup: MatchupWithPrediction
+  ) => {
+    if (matchup.round === 1) {
+      if (!hasPrediction(matchup)) {
+        validMatchups.push(matchup);
+      }
+      return;
     }
 
-    const otherPrediction = existingPredictions.find(
-      (prediction) =>
-        prediction.matchup.advances_to ===
-          existingPrediction.matchup.advances_to &&
-        prediction.matchup_id !== existingPrediction.matchup_id
+    const requisiteMatchups = matchups.filter(
+      (m) => m.advances_to === matchup.id
     );
-    if (!otherPrediction) {
-      continue;
+    if (requisiteMatchups.length !== 2) {
+      throw new Error('Encountered invalid bracket');
     }
 
-    const nextPrediction = await prismaClient.matchup.findFirst({
-      where: { id: existingPrediction.matchup.advances_to },
-    });
-    if (nextPrediction.winner) {
-      continue;
+    if (
+      !hasPrediction(matchup) &&
+      hasPrediction(requisiteMatchups[0]) &&
+      hasPrediction(requisiteMatchups[1])
+    ) {
+      validMatchups.push(matchup);
+      return;
     }
 
-    response.status(200).json({
-      success: true,
-      data: {
-        matchupId: existingPrediction.matchup.advances_to,
-        round: existingPrediction.matchup.round + 1,
-        teamA: existingPrediction.winner,
-        teamB: otherPrediction.winner,
-        bestOf: nextPrediction.best_of,
-      },
-    });
-    return;
-  }
+    findValidPredictionRecursive(validMatchups, requisiteMatchups[0]);
+    findValidPredictionRecursive(validMatchups, requisiteMatchups[1]);
+  };
 
-  response.status(200).json({
-    success: true,
-    messsage: 'No predictions to make',
-    data: null,
-  });
-  return;
+  const validMatchups = [];
+  findValidPredictionRecursive(validMatchups, finalMatchup);
+  return validMatchups;
 }
 
 export async function makePrediction(request: Request, response: Response) {
@@ -520,60 +473,27 @@ export async function makePrediction(request: Request, response: Response) {
     );
   }
 
-  const userPredictions = await prismaClient.prediction.findMany({
-    where: {
-      user_id: request.user.id,
-      tournament_id: tournamentId,
-    },
-    include: { matchup: true },
-  });
-
-  if (
-    userPredictions.some((prediction) => prediction.matchup_id === matchupId)
-  ) {
-    throw new BadRequestError('Already made prediction for match up');
+  if (tournament.bracket.predictions_locked) {
+    throw new BadRequestError(
+      'Can no longer make predictions for this tournament'
+    );
   }
 
-  const predictedMatchup = await prismaClient.matchup.findFirst({
-    where: { id: matchupId },
-  });
+  const validMatchups = await getValidPredictions(request.user.id, tournament);
+  const predictedMatchup = validMatchups.find((m) => m.id === matchupId);
   if (!predictedMatchup) {
-    throw new BadRequestError('Invalid prediction Id');
-  }
-
-  if (predictedMatchup.team_a_wins > 0 || predictedMatchup.team_b_wins > 0) {
-    throw new BadRequestError('Matchup is already underway');
-  }
-
-  if (!isNumberOfGamesValid(numberOfGames, predictedMatchup.best_of)) {
-    throw new BadRequestError('Invalid prediction - invalid number of games');
+    throw new BadRequestError('Invalid prediction');
   }
 
   if (
-    predictedMatchup.round === 1 &&
     predictedWinner !== predictedMatchup.team_a &&
     predictedWinner !== predictedMatchup.team_b
   ) {
-    throw new BadRequestError('Invalid prediction - invalid winner picked');
+    throw new BadRequestError('Invalid team picked');
   }
 
-  if (predictedMatchup.round > 1) {
-    const parentPredictions = userPredictions.filter(
-      (prediction) => prediction.matchup.advances_to === matchupId
-    );
-
-    if (parentPredictions.length !== 2) {
-      throw new BadRequestError(
-        'Invalid prediction - previous predictions not made'
-      );
-    }
-
-    if (
-      predictedWinner !== parentPredictions[0].winner &&
-      predictedWinner !== parentPredictions[1].winner
-    ) {
-      throw new BadRequestError('Invalid prediction - invalid winner picked');
-    }
+  if (!isNumberOfGamesValid(numberOfGames, predictedMatchup.best_of)) {
+    throw new BadRequestError('Invalid number of games picked');
   }
 
   await prismaClient.prediction.create({
@@ -588,8 +508,9 @@ export async function makePrediction(request: Request, response: Response) {
   });
 
   const [matchupData, finalsMatchupId] = await getBracketStateResponse(
-    request.body.userId ?? request.user.id,
-    tournament
+    request.user.id,
+    tournament,
+    true
   );
 
   response.status(200).json({
@@ -634,7 +555,8 @@ export async function getBracketStateForUser(
 
   const [matchupData, finalsMatchupId] = await getBracketStateResponse(
     userId,
-    tournament
+    tournament,
+    userId === request.user.id
   );
 
   const bracketState: BracketStateData = {
@@ -651,7 +573,8 @@ export async function getBracketStateForUser(
 
 async function getBracketStateResponse(
   userId: number,
-  tournament: Tournament
+  tournament: Tournament,
+  includePredictions
 ): Promise<[MatchupStateData[], number]> {
   const matchups = await prismaClient.matchup.findMany({
     where: { bracket_id: tournament.bracket_id },
@@ -665,10 +588,18 @@ async function getBracketStateResponse(
     },
   });
 
+  let validMatchups = [];
+  if (includePredictions) {
+    validMatchups = await getValidPredictions(userId, tournament);
+  }
+
   const matchupData = matchups.map((matchup) => {
     const parentMatchups = matchups.filter(
       (match) => match.advances_to === matchup.id
     );
+
+    const requiresPrediction =
+      includePredictions && validMatchups.some((p) => p.id === matchup.id);
 
     const result: MatchupStateData = {
       id: matchup.id,
@@ -683,6 +614,7 @@ async function getBracketStateResponse(
       best_of: matchup.best_of,
       team_a_wins: matchup.team_a_wins,
       team_b_wins: matchup.team_b_wins,
+      requires_prediction: requiresPrediction,
     };
     if (matchup.predictions.length > 0) {
       result.predictedWinner = matchup.predictions[0].winner as NBATeam;
