@@ -32,7 +32,7 @@ router
   .route('/v1/tournament/:id/generate-invite-code')
   .post(errorSafe(isUserAuthenticated, getTournamentInviteCode));
 router
-  .route('/v1/tournament/:id/prediction/make')
+  .route('/v1/tournament/:id/prediction')
   .post(errorSafe(isUserAuthenticated, makePrediction));
 router
   .route('/v1/tournament/:id/bracket/:user')

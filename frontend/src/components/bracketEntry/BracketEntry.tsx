@@ -5,12 +5,16 @@ import BracketTeam from './BracketTeam';
 
 export type BracketEntryProps = {
   state: MatchupStateData;
+  locked: boolean;
+  handleMakePredictionClicked: () => void;
 };
 
-export default function BracketEntry({ state }: BracketEntryProps) {
+export default function BracketEntry({
+  state,
+  locked,
+  handleMakePredictionClicked,
+}: BracketEntryProps) {
   const hasMadePrediction = state.predictedWinner !== undefined;
-  const lockedOutOfPrediction =
-    !hasMadePrediction && state.winner !== undefined;
 
   return (
     <div className={styles.container}>
@@ -31,9 +35,12 @@ export default function BracketEntry({ state }: BracketEntryProps) {
         className={styles.wins}
       >{`${state.team_a_wins} - ${state.team_b_wins}`}</div>
       <div className={styles.predictionArea}>
-        {lockedOutOfPrediction && 'Did not pick'}
+        {locked && !hasMadePrediction && 'Did not pick'}
         {hasMadePrediction &&
           `Picked ${state.predictedWinner} in ${state.number_of_games}`}
+        {state.requires_prediction && !hasMadePrediction && !locked && (
+          <button onClick={handleMakePredictionClicked}>Make Prediction</button>
+        )}
       </div>
     </div>
   );

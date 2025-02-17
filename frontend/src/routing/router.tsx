@@ -7,6 +7,7 @@ import Home from '../pages/home/Home';
 import Tournament from '../pages/tournament/Tournament';
 import { bracketLoader, tournamentDetailLoader } from '../utils/loaders';
 import Bracket from '../pages/bracket/Bracket';
+import MakePredictionPopup from '../components/popups/makePredictionPopup/MakePredictionPopup';
 
 const router = createBrowserRouter([
   {
