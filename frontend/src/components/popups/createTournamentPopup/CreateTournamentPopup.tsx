@@ -16,7 +16,7 @@ export default function CreateTournamentPopup({
   const [selectedBracket, setSelectedBracket] = useState<number>(-1);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { handleTournamentsChanged } = useContext(tournamentContext);
+  const handleTournamentsChanged = useContext(tournamentContext);
 
   const handleBracketChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedBracket(Number.parseInt(event.target.value));

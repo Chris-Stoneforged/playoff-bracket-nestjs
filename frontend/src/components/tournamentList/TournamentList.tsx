@@ -4,6 +4,7 @@ import styles from './TournamentList.module.css';
 import CreateTournamentPopup from '../popups/createTournamentPopup/CreateTournamentPopup';
 import { tournamentContext, userContext } from '../../utils/context';
 import JoinTournamentPopup from '../popups/joinTournamentPopup/JoinTournamentPopup';
+import { useParams } from 'react-router-dom';
 
 export type TournamentListProps = {
   tournaments: TournamentData[];
@@ -13,9 +14,12 @@ export default function TournamentList({ tournaments }: TournamentListProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isJoinPopupOpen, setIsJoinPopupOpen] = useState(false);
-  const { currentTournamentId, handleTournamentsChanged } =
-    useContext(tournamentContext);
+  const { tournamentId } = useParams<{ tournamentId: string }>();
+  const handleTournamentsChanged = useContext(tournamentContext);
   const user: UserData = useContext(userContext);
+  const selectedTournamentId: number = tournamentId
+    ? Number.parseInt(tournamentId)
+    : -1;
 
   // Memoize lables
   const memberLabels: Map<number, string> = new Map();
@@ -53,7 +57,7 @@ export default function TournamentList({ tournaments }: TournamentListProps) {
         {tournaments.map((tournament) => (
           <button
             className={`${styles.tournamentItem} ${
-              tournament.tournamentId === currentTournamentId
+              tournament.tournamentId === selectedTournamentId
                 ? styles.selected
                 : ''
             }`}

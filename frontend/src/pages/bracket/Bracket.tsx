@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Bracket.module.css';
 import { useLoaderData } from 'react-router-dom';
 import {
@@ -18,16 +18,36 @@ const defaultMatchup: MatchupData = {
   team_b_wins: 0,
 };
 
+const defaultBracket: BracketStateData = {
+  id: 0,
+  bracket_name: '',
+  left_side_name: '',
+  right_side_name: '',
+  root_matchup_id: 0,
+  predictions_locked: false,
+  matchups: [],
+};
+
 export default function Bracket() {
-  const bracketData: BracketStateData = useLoaderData() as BracketStateData;
+  const bracketState = useLoaderData() as BracketStateData;
+  const [bracketData, setBracketData] =
+    useState<BracketStateData>(defaultBracket);
   const [isPredictionPopupOpen, setIsPredictionPopupOpen] =
     useState<boolean>(false);
   const [predictedMatchup, setPredictedMatchup] =
     useState<MatchupData>(defaultMatchup);
 
+  useEffect(() => {
+    setBracketData(bracketState);
+  }, [bracketState]);
+
   const handleMakePredictionClicked = (matchUp: MatchupData) => {
     setPredictedMatchup(matchUp);
     setIsPredictionPopupOpen(true);
+  };
+
+  const handlePredictionMade = (bracketState: BracketStateData) => {
+    setBracketData(bracketState);
   };
 
   const columns: MatchupStateData[][] = [];
@@ -38,7 +58,7 @@ export default function Bracket() {
     (m) => m.id === bracketData.root_matchup_id
   );
   if (rootMatchup === undefined) {
-    throw new Error('Missing root matchup');
+    return;
   }
 
   while (roundNum > 0) {
@@ -89,9 +109,17 @@ export default function Bracket() {
       {isPredictionPopupOpen && (
         <MakePredictionPopup
           handlePopupClosed={() => setIsPredictionPopupOpen(false)}
+          handleBracketChanged={handlePredictionMade}
           matchup={predictedMatchup}
-          bracketLeftName={bracketData.left_side_name}
-          bracketRightName={bracketData.right_side_name}
+          matchupName={
+            predictedMatchup.id === rootMatchup.id
+              ? 'Finals'
+              : `${
+                  predictedMatchup.left_side
+                    ? bracketData.left_side_name
+                    : bracketData.right_side_name
+                } - Round ${predictedMatchup.round}`
+          }
         ></MakePredictionPopup>
       )}
     </div>

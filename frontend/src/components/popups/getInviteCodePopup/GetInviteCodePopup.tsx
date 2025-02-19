@@ -1,8 +1,8 @@
-import { tournamentContext } from '../../../utils/context';
+import { useParams } from 'react-router-dom';
 import { postRequest } from '../../../utils/routes';
 import Popup from '../popupTemplate/Popup';
 import styles from './GetInviteCodePopup.module.css';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type GetInviteCodePopupProps = {
   handlePopupClosed: () => void;
@@ -14,7 +14,10 @@ export default function GetInviteCodePopup({
   const [inviteCode, setInviteCode] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
   const [isValidCode, setIsValidCode] = useState(true);
-  const { currentTournamentId } = useContext(tournamentContext);
+  const { tournamentId } = useParams<{ tournamentId: string }>();
+  const currentTournamentId: number = tournamentId
+    ? Number.parseInt(tournamentId)
+    : -1;
 
   const handleCopyClicked = () => {
     navigator.clipboard.writeText(inviteCode);

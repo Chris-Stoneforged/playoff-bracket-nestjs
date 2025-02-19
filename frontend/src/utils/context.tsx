@@ -8,27 +8,13 @@ const defaultUser: UserData = {
   tournaments: [],
 };
 
-export type TournamentContext = {
-  currentTournamentId: number;
-  handleTournamentsChanged: (
-    tournament: TournamentData,
-    changeType: TournamentChangeType
-  ) => void;
-};
-
 const userContext = createContext<UserData>(defaultUser);
-const tournamentContext = createContext<TournamentContext>({
-  currentTournamentId: -1,
-  handleTournamentsChanged: (t, c) => {
-    return;
-  },
+const tournamentContext = createContext<
+  (tournament: TournamentData, changeType: TournamentChangeType) => void
+>((t, c) => {
+  return;
 });
 
-const interactableBracketContext = createContext<boolean>(false);
+const tournamentIdContext = createContext<number>(0);
 
-export {
-  defaultUser,
-  userContext,
-  tournamentContext,
-  interactableBracketContext,
-};
+export { defaultUser, userContext, tournamentContext, tournamentIdContext };

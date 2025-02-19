@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react';
 import styles from './LeaveTournamentPopup.module.css';
 import PopupWithSubmit from '../popupTemplate/PopupWithSubmit';
-import { tournamentContext, userContext } from '../../../utils/context';
+import { tournamentContext } from '../../../utils/context';
 import { postRequest } from '../../../utils/routes';
-import { useNavigate } from 'react-router-dom';
-import { UserData } from '@playoff-bracket-app/database';
+import { useNavigate, useParams } from 'react-router-dom';
 
 type LeaveTournamentPopupProps = {
   handlePopupClosed: () => void;
@@ -16,8 +15,11 @@ export default function LeaveTournamentPopup({
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
-  const { currentTournamentId, handleTournamentsChanged } =
-    useContext(tournamentContext);
+  const handleTournamentsChanged = useContext(tournamentContext);
+  const { tournamentId } = useParams<{ tournamentId: string }>();
+  const currentTournamentId: number = tournamentId
+    ? Number.parseInt(tournamentId)
+    : -1;
 
   const handleSubmitClicked = async () => {
     setIsLoading(true);

@@ -10,7 +10,6 @@ export default function Home() {
   const navigate = useNavigate();
   const user: UserData = useContext(userContext);
   const [tournaments, setTournaments] = useState<TournamentData[]>([]);
-  const [currentTournament, setCurrentTournament] = useState(-1);
 
   useEffect(() => {
     if (user?.tournaments) {
@@ -25,8 +24,7 @@ export default function Home() {
     switch (changeType) {
       case 'Added': {
         setTournaments([...tournaments, tournament]);
-        navigate(`/tournament/${tournament.tournamentId}`);
-        setCurrentTournament(tournament.tournamentId);
+        navigate(`/tournament/${tournament.tournamentId}/${user.userId}`);
         break;
       }
       case 'Removed': {
@@ -34,12 +32,10 @@ export default function Home() {
           tournaments.filter((t) => t.tournamentId !== tournament.tournamentId)
         );
         navigate('/');
-        setCurrentTournament(-1);
         break;
       }
       case 'Selected': {
-        setCurrentTournament(tournament.tournamentId);
-        navigate(`/tournament/${tournament.tournamentId}`);
+        navigate(`/tournament/${tournament.tournamentId}/${user.userId}`);
         break;
       }
     }
@@ -47,12 +43,7 @@ export default function Home() {
 
   return (
     <div className={styles.main}>
-      <tournamentContext.Provider
-        value={{
-          currentTournamentId: currentTournament,
-          handleTournamentsChanged: handleTournamentChanged,
-        }}
-      >
+      <tournamentContext.Provider value={handleTournamentChanged}>
         <TournamentList tournaments={tournaments} />
         {user.tournaments.length ? (
           <Outlet />

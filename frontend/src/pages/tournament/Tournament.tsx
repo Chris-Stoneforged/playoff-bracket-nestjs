@@ -1,18 +1,23 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import styles from './Tournament.module.css';
-import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
-import { userContext, interactableBracketContext } from '../../utils/context';
+import {
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+import { userContext, tournamentIdContext } from '../../utils/context';
 import TournamentSettingsMenu from '../../components/tournamentSettingsMenu/TournamentSettingsMenu';
 import { TournamentData, UserData } from '@playoff-bracket-app/database';
 
 export default function Tournament() {
   const navigate = useNavigate();
   const user: UserData = useContext(userContext);
-  const [selectedMemberId, setSelectedMemberId] = useState<number>(-1);
+  const { userId } = useParams<{ userId: string }>();
   const tournamentData: TournamentData = useLoaderData() as TournamentData;
+  const selectedMemberId: number = userId ? Number.parseInt(userId) : -1;
 
   const handleMemberClicked = (memberId: number) => {
-    setSelectedMemberId(memberId);
     navigate(`/tournament/${tournamentData.tournamentId}/${memberId}`);
   };
 
@@ -24,11 +29,9 @@ export default function Tournament() {
 
   return (
     <div className={styles.tournamentZone}>
-      <interactableBracketContext.Provider
-        value={selectedMemberId === user.userId}
-      >
+      <tournamentIdContext.Provider value={tournamentData.tournamentId}>
         <Outlet />
-      </interactableBracketContext.Provider>
+      </tournamentIdContext.Provider>
 
       <div className={styles.memberList}>
         {memberData.map((member) => (

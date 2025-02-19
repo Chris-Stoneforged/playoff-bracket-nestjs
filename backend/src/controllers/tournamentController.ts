@@ -396,7 +396,7 @@ type MatchupWithPrediction = Prisma.MatchupGetPayload<{
 async function getValidPredictions(
   userId: number,
   tournament: Tournament
-): Promise<MatchupWithPrediction[]> {
+): Promise<[MatchupWithPrediction[], MatchupWithPrediction[]]> {
   const matchups: MatchupWithPrediction[] = await prismaClient.matchup.findMany(
     {
       where: {
@@ -449,7 +449,7 @@ async function getValidPredictions(
 
   const validMatchups = [];
   findValidPredictionRecursive(validMatchups, finalMatchup);
-  return validMatchups;
+  return [matchups, validMatchups];
 }
 
 export async function makePrediction(request: Request, response: Response) {
@@ -479,16 +479,36 @@ export async function makePrediction(request: Request, response: Response) {
     );
   }
 
-  const validMatchups = await getValidPredictions(request.user.id, tournament);
+  const [matchups, validMatchups] = await getValidPredictions(
+    request.user.id,
+    tournament
+  );
   const predictedMatchup = validMatchups.find((m) => m.id === matchupId);
   if (!predictedMatchup) {
     throw new BadRequestError('Invalid prediction');
   }
 
-  if (
-    predictedWinner !== predictedMatchup.team_a &&
-    predictedWinner !== predictedMatchup.team_b
-  ) {
+  let validTeam =
+    predictedWinner === predictedMatchup.team_a ||
+    predictedWinner === predictedMatchup.team_b;
+
+  const parentPredictions = matchups.filter(
+    (m) => m.advances_to === predictedMatchup.id
+  );
+  if (parentPredictions.length == 2) {
+    if (parentPredictions[0].predictions.length > 0) {
+      validTeam =
+        validTeam ||
+        predictedWinner === parentPredictions[0].predictions[0].winner;
+    }
+    if (parentPredictions[1].predictions.length > 0) {
+      validTeam =
+        validTeam ||
+        predictedWinner === parentPredictions[1].predictions[0].winner;
+    }
+  }
+
+  if (!validTeam) {
     throw new BadRequestError('Invalid team picked');
   }
 
@@ -589,8 +609,13 @@ async function getBracketStateResponse(
   });
 
   let validMatchups = [];
+  let allMatchups = [];
   if (includePredictions) {
-    validMatchups = await getValidPredictions(userId, tournament);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    [allMatchups, validMatchups] = await getValidPredictions(
+      userId,
+      tournament
+    );
   }
 
   const matchupData = matchups.map((matchup) => {

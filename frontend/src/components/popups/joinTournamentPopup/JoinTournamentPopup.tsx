@@ -16,7 +16,7 @@ export default function JoinTournamentPopup({
   const [inviteInfo, setInviteInfo] = useState({ sender: '', bracketName: '' });
   const [hasInvite, setHasInvite] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
-  const { handleTournamentsChanged } = useContext(tournamentContext);
+  const handleTournamentsChanged = useContext(tournamentContext);
 
   const handleCodeChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInviteCode(event.target.value);
