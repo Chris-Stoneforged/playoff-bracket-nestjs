@@ -15,9 +15,23 @@ export default function BracketEntry({
   handleMakePredictionClicked,
 }: BracketEntryProps) {
   const hasMadePrediction = state.predictedWinner !== undefined;
+  const predictionNotInTeams =
+    state.predictedWinner &&
+    state.predictedWinner !== state.team_a &&
+    state.predictedWinner !== state.team_b;
 
   return (
-    <div className={styles.container}>
+    <div
+      className={`${styles.container} ${
+        state.winner && state.predictedWinner
+          ? state.winner === state.predictedWinner
+            ? styles.correct
+            : styles.incorrect
+          : predictionNotInTeams
+          ? styles.incorrect
+          : ''
+      }`}
+    >
       <div className={styles.logos}>
         <BracketTeam
           team={state.team_a}

@@ -146,12 +146,10 @@ export default function validateBracketJson(
 
     if (
       matchUp.winner &&
-      (matchUp.team_a_wins < maxWins || matchUp.team_b_wins < maxWins)
+      ((matchUp.winner === matchUp.team_a && matchUp.team_a_wins < maxWins) ||
+        (matchUp.winner === matchUp.team_b && matchUp.team_b_wins < maxWins))
     ) {
-      return [
-        false,
-        'Winner specified, but neither team has reached max win threshold',
-      ];
+      return [false, 'Winner specified, has not reached max win threshold'];
     }
 
     if (matchUp.round > highestRound) {

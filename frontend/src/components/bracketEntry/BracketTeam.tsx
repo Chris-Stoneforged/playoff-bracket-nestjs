@@ -35,12 +35,6 @@ export default function BracketTeam({
             : ''
         }`}
       ></img>
-      {outcomeDecided && predictionMade && isPredicted && isVictorious && (
-        <img src={tick} alt="tick" className={styles.overlayImage}></img>
-      )}
-      {outcomeDecided && predictionMade && isPredicted && !isVictorious && (
-        <img src={cross} alt="cross" className={styles.overlayImage}></img>
-      )}
     </div>
   );
 }
