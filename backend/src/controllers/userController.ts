@@ -92,7 +92,7 @@ export async function login(
         tournamentId: tournament.id,
         bracketName: tournament.bracket.bracket_name,
         memberData: tournament.users.map((u) => {
-          return { id: u.id, nickname: u.nickname };
+          return { id: u.id, nickname: u.nickname, score: 0 };
         }),
       };
     }),
@@ -145,7 +145,7 @@ export async function getUserData(request: Request, response: Response) {
         tournamentId: tournament.id,
         bracketName: tournament.bracket.bracket_name,
         memberData: tournament.users.map((u) => {
-          return { id: u.id, nickname: u.nickname };
+          return { id: u.id, nickname: u.nickname, score: 0 };
         }),
       };
     }),

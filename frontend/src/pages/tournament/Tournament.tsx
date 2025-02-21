@@ -41,7 +41,9 @@ export default function Tournament() {
             }`}
             onClick={() => handleMemberClicked(member.id)}
           >
-            {member.id === user?.userId ? 'Me' : member.nickname}
+            {`${member.id === user?.userId ? 'Me' : member.nickname} - ${
+              member.score
+            }`}
           </button>
         ))}
       </div>

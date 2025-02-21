@@ -13,6 +13,7 @@ export type TournamentData = {
 export type TournamentMemberData = {
   id: number;
   nickname: string;
+  score: number;
 };
 
 export type MatchupData = {

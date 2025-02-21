@@ -298,6 +298,9 @@ export async function getTournamentDetails(
       users: {
         include: {
           predictions: {
+            where: {
+              tournament_id: tournamentId,
+            },
             include: {
               matchup: true,
             },
