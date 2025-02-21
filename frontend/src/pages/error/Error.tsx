@@ -1,19 +1,38 @@
 import React from 'react';
 import styles from './Error.module.css';
-import { useRouteError } from 'react-router-dom';
+import { useNavigate, useRouteError } from 'react-router-dom';
+import HeaderBar from '../../components/headerBar/HeaderBar';
 
 export default function Error() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const error: any = useRouteError();
-  console.error(error);
+  const navigate = useNavigate();
+
+  const handleHomeClicked = () => {
+    navigate('/');
+  };
 
   return (
-    <div id="error-page">
-      <h1>Oops!</h1>
-      <p>Aan unexpected error has occurred.</p>
-      <p>
-        <i>{error.statusText || error.message}</i>
-      </p>
+    <div className={styles.rootDiv}>
+      <HeaderBar
+        user={null}
+        handleLogout={() => {
+          /**/
+        }}
+      ></HeaderBar>
+      <div className={styles.errorContent}>
+        <h1>Yikes!</h1>
+        <p> An unexpected error has occurred:</p>
+        <p className={styles.errorText}>
+          <i>{error.statusText || error.message}</i>
+        </p>
+        <button
+          className={styles.homeButton}
+          onClick={() => handleHomeClicked()}
+        >
+          Return Home
+        </button>
+      </div>
     </div>
   );
 }

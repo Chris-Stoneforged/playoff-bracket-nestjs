@@ -1,0 +1,25 @@
+.rootDiv {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.errorContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: large;
+  margin-top: 100px;
+}
+
+.errorText {
+  color: red;
+}
+
+.homeButton {
+  margin-top: 36px;
+  padding: 12px;
+}
