@@ -65,7 +65,7 @@
 }
 
 .selected {
-  border-color: greenyellow;
+  border-color: red;
 }
 
 .tournamentItemContent {

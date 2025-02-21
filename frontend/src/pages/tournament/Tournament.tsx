@@ -41,9 +41,8 @@ export default function Tournament() {
             }`}
             onClick={() => handleMemberClicked(member.id)}
           >
-            {`${member.id === user?.userId ? 'Me' : member.nickname} - ${
-              member.score
-            }`}
+            {member.id === user?.userId ? 'Me' : member.nickname}
+            <text className={styles.scoreText}>{`Score: ${member.score}`}</text>
           </button>
         ))}
       </div>
