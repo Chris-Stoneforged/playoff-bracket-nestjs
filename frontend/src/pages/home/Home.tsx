@@ -45,13 +45,7 @@ export default function Home() {
     <div className={styles.main}>
       <tournamentContext.Provider value={handleTournamentChanged}>
         <TournamentList tournaments={tournaments} />
-        {user.tournaments.length ? (
-          <Outlet />
-        ) : (
-          <div className={styles.noTournamentDefault}>
-            <p>Create or join a tournament to get started!</p>
-          </div>
-        )}
+        <Outlet />
       </tournamentContext.Provider>
     </div>
   );

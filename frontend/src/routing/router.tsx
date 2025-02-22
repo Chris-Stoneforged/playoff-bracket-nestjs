@@ -8,6 +8,8 @@ import Tournament from '../pages/tournament/Tournament';
 import { bracketLoader, tournamentDetailLoader } from '../utils/loaders';
 import Bracket from '../pages/bracket/Bracket';
 import MakePredictionPopup from '../components/popups/makePredictionPopup/MakePredictionPopup';
+import NoneSelected from '../pages/home/NoneSelected';
+import TournamentError from '../pages/error/TournamentError';
 
 const router = createBrowserRouter([
   {
@@ -27,14 +29,23 @@ const router = createBrowserRouter([
         element: <Home />,
         children: [
           {
-            path: '/tournament/:tournamentId',
-            element: <Tournament />,
-            loader: tournamentDetailLoader,
+            errorElement: <TournamentError />,
             children: [
               {
-                path: '/tournament/:tournamentId/:userId',
-                element: <Bracket />,
-                loader: bracketLoader,
+                index: true,
+                element: <NoneSelected />,
+              },
+              {
+                path: '/tournament/:tournamentId',
+                element: <Tournament />,
+                loader: tournamentDetailLoader,
+                children: [
+                  {
+                    path: '/tournament/:tournamentId/:userId',
+                    element: <Bracket />,
+                    loader: bracketLoader,
+                  },
+                ],
               },
             ],
           },
