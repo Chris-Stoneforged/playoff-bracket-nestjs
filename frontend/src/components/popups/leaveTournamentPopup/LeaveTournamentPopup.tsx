@@ -5,13 +5,7 @@ import { tournamentContext } from '../../../utils/context';
 import { postRequest } from '../../../utils/routes';
 import { useNavigate, useParams } from 'react-router-dom';
 
-type LeaveTournamentPopupProps = {
-  handlePopupClosed: () => void;
-};
-
-export default function LeaveTournamentPopup({
-  handlePopupClosed,
-}: LeaveTournamentPopupProps) {
+export default function LeaveTournamentPopup() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
@@ -20,6 +14,10 @@ export default function LeaveTournamentPopup({
   const currentTournamentId: number = tournamentId
     ? Number.parseInt(tournamentId)
     : -1;
+
+  const handlePopupClosed = () => {
+    navigate(-1);
+  };
 
   const handleSubmitClicked = async () => {
     setIsLoading(true);
@@ -37,7 +35,6 @@ export default function LeaveTournamentPopup({
       { tournamentId: currentTournamentId, bracketName: '', memberData: [] },
       'Removed'
     );
-    handlePopupClosed();
   };
 
   return (

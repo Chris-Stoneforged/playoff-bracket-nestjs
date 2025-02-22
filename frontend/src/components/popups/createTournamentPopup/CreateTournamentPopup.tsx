@@ -4,14 +4,10 @@ import { getRequest, postRequest } from '../../../utils/routes';
 import { BracketData } from '@playoff-bracket-app/database';
 import PopupWithSubmit from '../popupTemplate/PopupWithSubmit';
 import { tournamentContext } from '../../../utils/context';
+import { useNavigate } from 'react-router-dom';
 
-type CreateTournamentPopupProps = {
-  handlePopupClosed: () => void;
-};
-
-export default function CreateTournamentPopup({
-  handlePopupClosed,
-}: CreateTournamentPopupProps) {
+export default function CreateTournamentPopup() {
+  const navigate = useNavigate();
   const [availableBrackets, setAvailableBrackets] = useState<BracketData[]>([]);
   const [selectedBracket, setSelectedBracket] = useState<number>(-1);
   const [errorText, setErrorText] = useState<string | null>(null);
@@ -20,6 +16,10 @@ export default function CreateTournamentPopup({
 
   const handleBracketChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedBracket(Number.parseInt(event.target.value));
+  };
+
+  const handlePopupClosed = () => {
+    navigate(-1);
   };
 
   const handleCreateClicked = async () => {
@@ -39,7 +39,6 @@ export default function CreateTournamentPopup({
       },
       'Added'
     );
-    handlePopupClosed();
   };
 
   useEffect(() => {

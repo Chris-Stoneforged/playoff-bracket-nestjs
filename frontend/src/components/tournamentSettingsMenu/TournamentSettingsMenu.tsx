@@ -1,17 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './TournamentSettingsMenu.module.css';
-import GetInviteCodePopup from '../popups/getInviteCodePopup/GetInviteCodePopup';
 import LeaveTournamentPopup from '../popups/leaveTournamentPopup/LeaveTournamentPopup';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 export default function TournamentSettingsMenu() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
-  const [isInviteCodePopupOpen, setIsInviteCodePopupOpen] = useState(false);
-  const [isLeaveTournamentPopupOpen, setIsLeaveTournamentPopupOpen] =
-    useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
-
   const settingsButton = useRef<HTMLButtonElement>(null);
   const settingsMenu = useRef<HTMLDivElement>(null);
+
+  const { tournamentId } = useParams<{ tournamentId: string }>();
+  const currentTournamentId: number = tournamentId
+    ? Number.parseInt(tournamentId)
+    : -1;
 
   const handleMenuToggle = (open: boolean) => {
     if (settingsButton.current) {
@@ -19,16 +22,6 @@ export default function TournamentSettingsMenu() {
       setPosition({ top: rect.bottom, left: rect.right });
     }
     setIsSettingsMenuOpen(open);
-  };
-
-  const handleGetInviteClicked = () => {
-    setIsInviteCodePopupOpen(true);
-    setIsSettingsMenuOpen(false);
-  };
-
-  const handleLeaveTournamentClicked = () => {
-    setIsLeaveTournamentPopupOpen(true);
-    setIsSettingsMenuOpen(false);
   };
 
   useEffect(() => {
@@ -77,26 +70,21 @@ export default function TournamentSettingsMenu() {
             zIndex: 20,
           }}
         >
-          <button className={styles.menuItem} onClick={handleGetInviteClicked}>
-            Get Invite Code
+          <button
+            className={styles.menuItem}
+            onClick={() =>
+              navigate(`/tournament/${currentTournamentId}/invite`)
+            }
+          >
+            Get Invite Link
           </button>
           <button
             className={styles.menuItem}
-            onClick={handleLeaveTournamentClicked}
+            onClick={() => navigate(`/tournament/${currentTournamentId}/leave`)}
           >
             Leave Tournament
           </button>
         </div>
-      )}
-      {isInviteCodePopupOpen && (
-        <GetInviteCodePopup
-          handlePopupClosed={() => setIsInviteCodePopupOpen(false)}
-        ></GetInviteCodePopup>
-      )}
-      {isLeaveTournamentPopupOpen && (
-        <LeaveTournamentPopup
-          handlePopupClosed={() => setIsLeaveTournamentPopupOpen(false)}
-        ></LeaveTournamentPopup>
       )}
     </div>
   );

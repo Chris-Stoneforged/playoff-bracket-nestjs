@@ -7,10 +7,26 @@
 
 .inviteCodeText {
   font-size: large;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  color: #0000ee;
 }
 
 .copyButton {
-  height: 30px;
   margin-left: 16px;
   padding: 4px;
+  background-color: white;
+  border: none;
+}
+
+.copyButton:hover {
+  background-color: rgb(230, 230, 230);
+  border: none;
+}
+
+.copyButtonImage {
+  height: 24px;
+  width: 24px;
 }

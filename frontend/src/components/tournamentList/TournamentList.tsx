@@ -1,19 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { TournamentData, UserData } from '@playoff-bracket-app/database';
 import styles from './TournamentList.module.css';
-import CreateTournamentPopup from '../popups/createTournamentPopup/CreateTournamentPopup';
 import { tournamentContext, userContext } from '../../utils/context';
-import JoinTournamentPopup from '../popups/joinTournamentPopup/JoinTournamentPopup';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export type TournamentListProps = {
   tournaments: TournamentData[];
 };
 
 export default function TournamentList({ tournaments }: TournamentListProps) {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
-  const [isJoinPopupOpen, setIsJoinPopupOpen] = useState(false);
   const { tournamentId } = useParams<{ tournamentId: string }>();
   const handleTournamentsChanged = useContext(tournamentContext);
   const user: UserData = useContext(userContext);
@@ -76,28 +73,17 @@ export default function TournamentList({ tournaments }: TournamentListProps) {
       <div className={styles.bottomButtons}>
         <button
           className={styles.bottomButton}
-          onClick={() => setIsCreatePopupOpen(true)}
+          onClick={() => navigate('/create')}
         >
           Create
         </button>
-        <button
+        {/* <button
           className={styles.bottomButton}
           onClick={() => setIsJoinPopupOpen(true)}
         >
           Join
-        </button>
+        </button> */}
       </div>
-
-      {isCreatePopupOpen && (
-        <CreateTournamentPopup
-          handlePopupClosed={() => setIsCreatePopupOpen(false)}
-        />
-      )}
-      {isJoinPopupOpen && (
-        <JoinTournamentPopup
-          handlePopupClosed={() => setIsJoinPopupOpen(false)}
-        />
-      )}
     </div>
   );
 }

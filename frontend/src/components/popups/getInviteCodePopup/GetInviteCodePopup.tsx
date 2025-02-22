@@ -1,16 +1,12 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { postRequest } from '../../../utils/routes';
 import Popup from '../popupTemplate/Popup';
 import styles from './GetInviteCodePopup.module.css';
 import React, { useEffect, useState } from 'react';
+import copy from '../../../assets/copy.png';
 
-type GetInviteCodePopupProps = {
-  handlePopupClosed: () => void;
-};
-
-export default function GetInviteCodePopup({
-  handlePopupClosed,
-}: GetInviteCodePopupProps) {
+export default function GetInviteCodePopup() {
+  const navigate = useNavigate();
   const [inviteCode, setInviteCode] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
   const [isValidCode, setIsValidCode] = useState(true);
@@ -21,6 +17,10 @@ export default function GetInviteCodePopup({
 
   const handleCopyClicked = () => {
     navigator.clipboard.writeText(inviteCode);
+  };
+
+  const handlePopupClosed = () => {
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -36,7 +36,8 @@ export default function GetInviteCodePopup({
       }
 
       const json = await response.json();
-      setInviteCode(json.data);
+      const baseUrl = import.meta.env.VITE_URL;
+      setInviteCode(`${baseUrl}/join/${json.data}`);
       setIsDisabled(false);
     };
 
@@ -58,7 +59,7 @@ export default function GetInviteCodePopup({
             className={styles.copyButton}
             onClick={() => handleCopyClicked()}
           >
-            Copy
+            <img className={styles.copyButtonImage} src={copy} alt="Copy"></img>
           </button>
         )}
       </div>
