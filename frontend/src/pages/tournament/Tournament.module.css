@@ -32,3 +32,11 @@
 .scoreText {
   font-size: xx-small;
 }
+
+.winnerText {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: x-large;
+}

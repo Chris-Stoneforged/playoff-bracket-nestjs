@@ -20,6 +20,16 @@ export default function BracketEntry({
     state.predictedWinner !== state.team_a &&
     state.predictedWinner !== state.team_b;
 
+  const correctTeam =
+    hasMadePrediction && state.predictedWinner === state.winner;
+  const incorrectTeam =
+    hasMadePrediction && state.predictedWinner !== state.winner;
+  const correctNumberOfGames =
+    correctTeam &&
+    state.number_of_games === state.team_a_wins + state.team_b_wins;
+  const inccorectNumberOfGames =
+    state.number_of_games !== state.team_a_wins + state.team_b_wins;
+
   return (
     <div
       className={`${styles.container} ${
@@ -50,8 +60,35 @@ export default function BracketEntry({
       >{`${state.team_a_wins} - ${state.team_b_wins}`}</div>
       <div className={styles.predictionArea}>
         {locked && !hasMadePrediction && 'Did not pick'}
-        {hasMadePrediction &&
-          `Picked ${state.predictedWinner} in ${state.number_of_games}`}
+        {hasMadePrediction && (
+          <text>
+            Picked{' '}
+            <b
+              className={
+                correctTeam
+                  ? styles.correctText
+                  : incorrectTeam
+                  ? styles.incorrectText
+                  : ''
+              }
+            >
+              {state.predictedWinner}
+            </b>{' '}
+            in{' '}
+            <b
+              className={
+                correctNumberOfGames
+                  ? styles.correctText
+                  : inccorectNumberOfGames
+                  ? styles.incorrectText
+                  : ''
+              }
+            >
+              {' '}
+              {state.number_of_games}
+            </b>
+          </text>
+        )}
         {state.requires_prediction && !hasMadePrediction && !locked && (
           <button onClick={handleMakePredictionClicked}>Make Prediction</button>
         )}

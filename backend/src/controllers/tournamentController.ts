@@ -307,7 +307,11 @@ export async function getTournamentDetails(
           },
         },
       },
-      bracket: true,
+      bracket: {
+        include: {
+          matchups: true,
+        },
+      },
     },
   });
 
@@ -329,7 +333,7 @@ export async function getTournamentDetails(
     success: true,
     data: {
       tournamentId: tournament.id,
-      bracketName: tournament.bracket.bracket_name,
+      bracketWithMatchups: tournament.bracket,
       memberData: memberData,
     },
   });

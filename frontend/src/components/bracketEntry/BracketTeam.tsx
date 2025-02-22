@@ -30,7 +30,9 @@ export default function BracketTeam({
         className={`${styles.teamImage} ${
           predictionMade
             ? isPredicted
-              ? styles.predicted
+              ? outcomeDecided && !isVictorious
+                ? styles.predictedWrong
+                : styles.predicted
               : styles.notPredicted
             : ''
         }`}

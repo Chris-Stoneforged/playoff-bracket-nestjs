@@ -10,6 +10,12 @@ export type TournamentData = {
   memberData: TournamentMemberData[];
 };
 
+export type TournamentWithBracketData = {
+  tournamentId: number;
+  bracketWithMatchups: BracketMatchupsData;
+  memberData: TournamentMemberData[];
+};
+
 export type TournamentMemberData = {
   id: number;
   nickname: string;

@@ -8,13 +8,17 @@ import {
 } from 'react-router-dom';
 import { userContext, tournamentIdContext } from '../../utils/context';
 import TournamentSettingsMenu from '../../components/tournamentSettingsMenu/TournamentSettingsMenu';
-import { TournamentData, UserData } from '@playoff-bracket-app/database';
+import {
+  TournamentWithBracketData,
+  UserData,
+} from '@playoff-bracket-app/database';
 
 export default function Tournament() {
   const navigate = useNavigate();
   const user: UserData = useContext(userContext);
   const { userId } = useParams<{ userId: string }>();
-  const tournamentData: TournamentData = useLoaderData() as TournamentData;
+  const tournamentData: TournamentWithBracketData =
+    useLoaderData() as TournamentWithBracketData;
   const selectedMemberId: number = userId ? Number.parseInt(userId) : -1;
 
   const handleMemberClicked = (memberId: number) => {
@@ -26,6 +30,13 @@ export default function Tournament() {
   const meIndex = memberData.findIndex((m) => m.id === user?.userId);
   const [me] = memberData.splice(meIndex, 1);
   memberData.unshift(me);
+
+  const isOver = tournamentData.bracketWithMatchups.matchups.every(
+    (m) => m.winner
+  );
+  const highestScore = tournamentData.memberData.reduce((prev, curr) =>
+    curr.score > prev.score ? curr : prev
+  );
 
   return (
     <div className={styles.tournamentZone}>
@@ -47,6 +58,11 @@ export default function Tournament() {
         ))}
       </div>
       <TournamentSettingsMenu />
+      {isOver && (
+        <text className={styles.winnerText}>
+          Winner: <b>{highestScore.nickname}</b>!
+        </text>
+      )}
     </div>
   );
 }

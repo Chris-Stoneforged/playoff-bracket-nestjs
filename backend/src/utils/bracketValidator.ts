@@ -90,6 +90,7 @@ export default function validateBracketJson(
       }
 
       if (
+        nextMatchup &&
         matchUp.winner !== nextMatchup.team_a &&
         matchUp.winner !== nextMatchup.team_b
       ) {
