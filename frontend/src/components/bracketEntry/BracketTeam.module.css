@@ -1,6 +1,8 @@
 .logo {
-  width: 60px;
-  height: 60px;
+  max-width: 80px;
+  min-width: 40px;
+  aspect-ratio: 1 / 1;
+  flex: 1 1 auto;
   margin: 6px;
   position: relative;
   display: flex;
@@ -23,12 +25,4 @@
 
 .predictedWrong {
   filter: drop-shadow(0 0 2px red) drop-shadow(0 0 4px red);
-}
-
-.overlayImage {
-  width: 80%;
-  height: 80%;
-  top: 10%;
-  left: 10%;
-  position: absolute;
 }

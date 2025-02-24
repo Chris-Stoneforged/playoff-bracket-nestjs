@@ -81,12 +81,6 @@ export default function Bracket() {
     <div className={styles.bracketContainer}>
       {columns.map((c) => (
         <div className={styles.bracketColumn}>
-          {c[0].round === 1 &&
-            `${
-              c[0].left_side
-                ? bracketData.left_side_name
-                : bracketData.right_side_name
-            }`}
           {c.map((m) => (
             <BracketEntry
               state={m}

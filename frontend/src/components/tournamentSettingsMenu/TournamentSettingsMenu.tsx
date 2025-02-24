@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './TournamentSettingsMenu.module.css';
-import LeaveTournamentPopup from '../popups/leaveTournamentPopup/LeaveTournamentPopup';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function TournamentSettingsMenu() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const settingsButton = useRef<HTMLButtonElement>(null);

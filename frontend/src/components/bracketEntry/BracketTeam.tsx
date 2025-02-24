@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './BracketTeam.module.css';
 import logos from '../../utils/logos';
-import tick from '../../assets/tick.png';
-import cross from '../../assets/cross.png';
 import { NBATeam } from '@playoff-bracket-app/database';
 
 export type BracketTeamProps = {
